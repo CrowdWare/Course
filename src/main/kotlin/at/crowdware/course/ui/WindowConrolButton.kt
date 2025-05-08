@@ -17,14 +17,27 @@
  *  along with NoCodeLib.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.crowdware.nocode.theme
+package at.crowdware.course.ui
 
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Shapes
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-val AppShapes = Shapes(
-    small = RoundedCornerShape(4.dp),
-    medium = RoundedCornerShape(8.dp),
-    large = RoundedCornerShape(16.dp)
-)
+
+@Composable
+fun WindowControlButton(color: Color, onClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .size(12.dp)
+            .clip(CircleShape)
+            .background(color)
+            .clickable(onClick = onClick)
+    )
+}

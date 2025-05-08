@@ -17,6 +17,8 @@
  *  along with NoCodeLib.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+package at.crowdware.course.util
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue

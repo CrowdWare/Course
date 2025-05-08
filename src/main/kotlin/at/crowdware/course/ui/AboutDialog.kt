@@ -17,6 +17,8 @@
  *  along with NoCodeLib.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+package at.crowdware.course.ui
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -24,7 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.res.loadImageBitmap
 import androidx.compose.ui.unit.dp
-import at.crowdware.nocode.theme.ExtendedTheme
+import at.crowdware.course.theme.ExtendedTheme
 
 import java.io.InputStream
 

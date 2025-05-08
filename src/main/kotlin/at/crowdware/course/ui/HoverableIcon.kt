@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C) 2025 CrowdWare
  *
@@ -18,12 +17,15 @@
  *  along with NoCodeLib.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+package at.crowdware.course.ui
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.material.Icon
@@ -33,6 +35,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.lerp
+//import androidx.compose.ui.input.pointer.pointerMoveFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerMoveFilter
 import androidx.compose.ui.text.TextStyle
@@ -41,82 +46,55 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
-import at.crowdware.nocode.theme.ExtendedTheme
+import at.crowdware.course.theme.ExtendedTheme
 
-/*
-@OptIn(ExperimentalComposeUiApi::class)
+enum class TooltipPosition {
+    Left, Right
+}
+
+
 @Composable
-actual fun HoverableIconContent(
-    isHovered: Boolean,
+fun HoverableIcon(
     onClick: () -> Unit,
     painter: Painter,
     tooltipText: String,
     isSelected: Boolean,
-    onHoverChange: (Boolean) -> Unit
+    tooltipPosition: TooltipPosition = TooltipPosition.Right
 ) {
-    val lightenedBackgroundColor = LightenColor(MaterialTheme.colors.primary, 0.1f)
+    var isHovered by remember { mutableStateOf(false) }
 
-    Box(modifier = Modifier
-        .size(48.dp)
-        .pointerMoveFilter(
-            onEnter = {
-                onHoverChange(true)
-                false
-            },
-            onExit = {
-                onHoverChange(false)
-                false
-            }
-        ).clickable { onClick() }
-    ) {
-        Icon(
-            painter = painter,
-            contentDescription = "Hoverable Icon",
-            tint = if (isHovered || isSelected) ExtendedTheme.colors.accentColor else MaterialTheme.colors.onPrimary,
-            modifier = Modifier.size(32.dp).align(Alignment.Center)
-        )
-        if (isHovered) {
-            Popup(
-                alignment = Alignment.TopStart,
-                offset = IntOffset(38, 8),
-                properties = PopupProperties(focusable = false)
-            ) {
-                Row(
-                    modifier = Modifier.pointerMoveFilter(
-                        onEnter = {
-                            onHoverChange(true)
-                            false
-                        },
-                        onExit = {
-                            onHoverChange(false)
-                            false
-                        }
-                    ),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(12.dp, 16.dp)
-                            .background(lightenedBackgroundColor, TriangleShape())
-                    )
-                    Box(
-                        modifier = Modifier
-                            .background(lightenedBackgroundColor, shape = RoundedCornerShape(4.dp))
-                            .padding(8.dp)
-                    ) {
-                        BasicText(
-                            text = tooltipText,
-                            style = TextStyle(
-                                color = MaterialTheme.colors.onSurface,
-                                fontSize = 12.sp
-                            )
-                        )
-                    }
-                }
-            }
+    HoverableIconContent(
+        isHovered = isHovered,
+        onClick = onClick,
+        painter = painter,
+        tooltipText = tooltipText,
+        isSelected = isSelected,
+        onHoverChange = { hover -> isHovered = hover},
+        tooltipPosition = tooltipPosition
+    )
+}
+
+fun TriangleShape(flipped: Boolean = false): Shape {
+    return GenericShape { size, _ ->
+        if (!flipped) {
+            // ▶️ zeigt nach links (Standard)
+            moveTo(size.width, 0f)
+            lineTo(0f, size.height / 2)
+            lineTo(size.width, size.height)
+        } else {
+            // ◀️ zeigt nach rechts (gedreht)
+            moveTo(0f, 0f)
+            lineTo(size.width, size.height / 2)
+            lineTo(0f, size.height)
         }
+        close()
     }
-}*/
+}
+@Composable
+fun LightenColor(color: Color, lightenFactor: Float = 0.3f): Color {
+    // Mischt die Farbe mit Weiß, um sie aufzuhellen (ohne Transparenz)
+    return lerp(color, Color.White, lightenFactor)
+}
 
 
 @OptIn(ExperimentalComposeUiApi::class)

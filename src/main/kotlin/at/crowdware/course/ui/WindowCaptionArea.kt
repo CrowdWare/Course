@@ -16,7 +16,7 @@
  * - Added double-click detection for maximization and restoration
  */
 
-package at.crowdware.nocode.ui
+package at.crowdware.course.ui
 
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown

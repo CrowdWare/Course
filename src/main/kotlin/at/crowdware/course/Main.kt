@@ -17,14 +17,11 @@
  *  along with Course.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.crowdware.nocodedesigner
+package at.crowdware.course
 
-import GlobalAppState
-import GlobalAppState.appState
-import HoverableIcon
-import State
-import TooltipPosition
-import aboutDialog
+import at.crowdware.course.util.GlobalAppState
+import at.crowdware.course.util.State
+import at.crowdware.course.ui.aboutDialog
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -32,6 +29,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.darkColors
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,12 +41,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
-import at.crowdware.nocode.theme.AppTheme
-import at.crowdware.nocode.theme.ExtendedTheme
-import at.crowdware.nocode.ui.WindowCaptionArea
-import at.crowdware.nocode.ui.WindowControlButton
-import createAppState
-import desktop
+import at.crowdware.course.theme.AppTheme
+import at.crowdware.course.theme.ExtendedTheme
+import at.crowdware.course.ui.WindowCaptionArea
+import at.crowdware.course.ui.WindowControlButton
+import at.crowdware.course.util.createAppState
+import at.crowdware.course.ui.desktop
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.awt.Desktop
@@ -58,7 +56,6 @@ import java.awt.Window
 import java.io.File
 import java.io.IOException
 import java.io.PrintStream
-import java.net.URI
 
 
 private const val APPNAME = "Course"
@@ -120,7 +117,7 @@ fun main() = application {
     ) {
 
         var isMaximized by remember { mutableStateOf(window.extendedState == Frame.MAXIMIZED_BOTH) }
-        window.minimumSize = Dimension(770, 735)
+        window.minimumSize = Dimension(400, 300)
 
         LaunchedEffect(appState.theme) {
             // set new location

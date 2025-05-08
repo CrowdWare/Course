@@ -23,19 +23,36 @@ App {
                 label: "Lection 2"
                 src: "lection_2.md"
             }
+            Lection {
+                label: "Lection 3"
+                src: "lection_3.md"
+            }
         }
 
         Topic {
             label: "Topic 2"
 
             Lection {
-                label: "Lection 3"
-                src: "lection_3.md"
+                label: "Lection 4"
+                src: "lection_4.md"
             }
 
             Lection {
-                label: "Lection 4"
-                src: "lection_4.md"
+                label: "Lection 5"
+                src: "lection_5.md"
+            }
+        }
+        Topic {
+            label: "Topic 3"
+
+            Lection {
+                label: "Lection 6"
+                src: "lection_6.md"
+            }
+
+            Lection {
+                label: "Lection 7"
+                src: "lection_7.md"
             }
         }
     }

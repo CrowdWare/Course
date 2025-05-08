@@ -17,7 +17,7 @@
  *  along with NoCodeLib.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.crowdware.nocode.theme
+package at.crowdware.course.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

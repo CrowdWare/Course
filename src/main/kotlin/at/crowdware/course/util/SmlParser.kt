@@ -17,6 +17,8 @@
  *  along with NoCodeLib.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+package at.crowdware.course.util
+
 import com.github.h0tk3y.betterParse.grammar.parseToEnd
 import com.github.h0tk3y.betterParse.parser.Parser
 import com.github.h0tk3y.betterParse.grammar.Grammar

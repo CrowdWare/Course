@@ -17,6 +17,8 @@
  *  along with NoCodeLib.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+package at.crowdware.course.ui
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -25,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 //import androidx.compose.ui.res.loadImageBitmap
 import androidx.compose.ui.unit.dp
-
 
 @Composable
 fun IconDisplay(bmp: ImageBitmap?) {
