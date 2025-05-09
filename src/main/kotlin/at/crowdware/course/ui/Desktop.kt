@@ -29,17 +29,75 @@ import androidx.compose.ui.unit.dp
 import at.crowdware.course.util.getStringValue
 import at.crowdware.course.util.parseSML
 
+data class Theme(
+    var primary: String = "",
+    var onPrimary: String = "",
+    var primaryContainer: String = "",
+    var onPrimaryContainer: String = "",
+    var surface: String = "",
+    var onSurface: String = "",
+    var secondary: String = "",
+    var onSecondary: String = "",
+    var secondaryContainer: String = "",
+    var onSecondaryContainer: String = "",
+    var tertiary: String = "",
+    var onTertiary: String = "",
+    var tertiaryContainer: String = "",
+    var onTertiaryContainer: String = "",
+    var outline: String = "",
+    var outlineVariant: String = "",
+    var onErrorContainer: String = "",
+    var onError: String = "",
+    var inverseSurface: String = "",
+    var inversePrimary: String = "",
+    var inverseOnSurface: String = "",
+    var background: String = "",
+    var onBackground: String = "",
+    var error: String = "",
+    var scrim: String = ""
+)
+
 @Composable
 fun desktop() {
     val langs = mutableListOf<String>()
     var lang by remember { mutableStateOf("") }
     var page by remember { mutableStateOf("") }
+    var theme = Theme()
     val topicList = mutableListOf<AccordionEntry>()
     val inputStream = object {}.javaClass.classLoader.getResourceAsStream("app.sml")
     val content = inputStream?.bufferedReader()?.use { it.readText() }
     if (content != null) {
         val (parsedApp, _) = parseSML(content)
         if (parsedApp != null) {
+            for (node in parsedApp.children) {
+                if (node.name == "Theme") {
+                    theme.primary = getStringValue(node, "primary", "")
+                    theme.onPrimary = getStringValue(node, "onPrimary", "")
+                    theme.primaryContainer = getStringValue(node, "primaryContainer", "")
+                    theme.onPrimaryContainer = getStringValue(node, "onPrimaryContainer", "")
+                    theme.surface = getStringValue(node, "surface", "")
+                    theme.onSurface = getStringValue(node, "onSurface", "")
+                    theme.secondary = getStringValue(node, "secondary", "")
+                    theme.onSecondary = getStringValue(node, "onSecondary", "")
+                    theme.secondaryContainer = getStringValue(node, "secondaryContainer", "")
+                    theme.onSecondaryContainer = getStringValue(node, "onSecondaryContainer", "")
+                    theme.tertiary = getStringValue(node, "tertiary", "")
+                    theme.onTertiary = getStringValue(node, "onTertiary", "")
+                    theme.tertiaryContainer = getStringValue(node, "tertiaryContainer", "")
+                    theme.onTertiaryContainer = getStringValue(node, "onTertiaryContainer", "")
+                    theme.outline = getStringValue(node, "outline", "")
+                    theme.outlineVariant = getStringValue(node, "outlineVariant", "")
+                    theme.onErrorContainer = getStringValue(node, "onErrorContainer", "")
+                    theme.onError = getStringValue(node, "onError", "")
+                    theme.inverseSurface = getStringValue(node, "inverseSurface", "")
+                    theme.inversePrimary = getStringValue(node, "inversePrimary", "")
+                    theme.inverseOnSurface = getStringValue(node, "inverseOnSurface", "")
+                    theme.background = getStringValue(node, "background", "")
+                    theme.onBackground = getStringValue(node, "onBackground", "")
+                    theme.error = getStringValue(node, "error", "")
+                    theme.scrim = getStringValue(node, "scrim", "")
+                }
+            }
             for(node in parsedApp.children) {
                 if (node.name == "Course") {
                     lang = getStringValue(node, "lang", "")
@@ -72,7 +130,7 @@ fun desktop() {
             }
         }
         Column(modifier = Modifier.fillMaxWidth()) {
-            ShowLecture(page, lang)
+            ShowLecture(theme, page, lang)
         }
     }
 }

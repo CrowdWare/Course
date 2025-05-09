@@ -25,8 +25,10 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -39,7 +41,7 @@ import at.crowdware.course.theme.ExtendedTheme
 import at.crowdware.course.util.*
 
 @Composable
-fun ShowLecture(page: String, lang: String) {
+fun ShowLecture(theme: Theme, page: String, lang: String) {
     val inputStream = object {}.javaClass.classLoader.getResourceAsStream("pages/$page")
     val content = inputStream?.bufferedReader()?.use { it.readText() }
     if (content != null) {
@@ -53,7 +55,7 @@ fun ShowLecture(page: String, lang: String) {
                 padding(top = padding.top.dp, bottom = padding.bottom.dp, start = padding.left.dp, end = padding.right.dp)) {
 
                 for (element in parsedPage.children) {
-                    renderElement(element, lang)
+                    renderElement(theme, element, lang)
                 }
             }
         }
@@ -61,28 +63,28 @@ fun ShowLecture(page: String, lang: String) {
 }
 
 @Composable
-fun renderElement(node: SmlNode, lang: String) {
+fun renderElement(theme: Theme, node: SmlNode, lang: String) {
     when (node.name) {
         "Column" -> {
-            renderColumn(node, lang)
+            renderColumn(theme, node, lang)
         }
         "Row" -> {
-            renderRow(node, lang)
+            renderRow(theme, node, lang)
         }
         "Markdown" -> {
-            renderMarkdown(modifier = Modifier, node, lang)
+            renderMarkdown(modifier = Modifier, theme, node, lang)
         }
         "Text" -> {
-            renderText(node)
+            renderText(theme, node)
         }
         "Image" -> {
-            renderImage(node)
+            renderImage(theme, node)
         }
         "Youtube" -> {
-            renderYoutube(node)
+            renderYoutube(theme, node)
         }
         "Button" -> {
-            renderButton(node)
+            renderButton(theme, node)
         }
         else -> {
             println("unhandled element: ${node.name}")
@@ -91,27 +93,27 @@ fun renderElement(node: SmlNode, lang: String) {
 }
 
 @Composable
-fun renderColumn(node: SmlNode, lang: String) {
+fun renderColumn(theme: Theme, node: SmlNode, lang: String) {
     val padding = getPadding(node)
     Column(modifier = Modifier.padding(top = padding.top.dp, bottom = padding.bottom.dp, start = padding.left.dp, end = padding.right.dp)) {
         for (n in node.children) {
-            renderElement(n, lang)
+            renderElement(theme, n, lang)
         }
     }
 }
 
 @Composable
-fun renderRow(node: SmlNode, lang: String) {
+fun renderRow(theme: Theme, node: SmlNode, lang: String) {
     val padding = getPadding(node)
     Row(modifier = Modifier.padding(top = padding.top.dp, bottom = padding.bottom.dp, start = padding.left.dp, end = padding.right.dp)) {
         for (n in node.children) {
-            renderElement(n, lang)
+            renderElement(theme, n, lang)
         }
     }
 }
 
 @Composable
-fun renderMarkdown(modifier: Modifier = Modifier, node: SmlNode, lang: String) {
+fun renderMarkdown(modifier: Modifier = Modifier, theme: Theme, node: SmlNode, lang: String) {
     val text = getStringValue(node, "text", "")
     val color = getStringValue(node, "color", "onBackground")
     val fontSize = getIntValue(node, "fontSize", 16)
@@ -129,7 +131,7 @@ fun renderMarkdown(modifier: Modifier = Modifier, node: SmlNode, lang: String) {
     Text(
         modifier = modifier.fillMaxWidth(),
         text = parsedMarkdown,
-        //style = TextStyle(color = hexToColor(color)),
+        style = TextStyle(color = hexToColor(theme, color)),
         fontSize = fontSize.sp,
         fontWeight = getFontWeight(node),
         textAlign = getTextAlign(node)
@@ -137,23 +139,23 @@ fun renderMarkdown(modifier: Modifier = Modifier, node: SmlNode, lang: String) {
 }
 
 @Composable
-fun renderText(node: SmlNode) {
+fun renderText(theme: Theme, node: SmlNode) {
     val text = getStringValue(node, "text", "")
     Text(text)
 }
 
 @Composable
-fun renderImage(node: SmlNode) {
+fun renderImage(theme: Theme, node: SmlNode) {
 
 }
 
 @Composable
-fun renderYoutube(node: SmlNode) {
+fun renderYoutube(theme: Theme, node: SmlNode) {
 
 }
 
 @Composable
-fun renderButton(node: SmlNode) {
+fun renderButton(theme: Theme, node: SmlNode) {
 
 }
 
@@ -343,8 +345,7 @@ fun parseMarkdown(markdown: String): AnnotatedString {
     return builder.toAnnotatedString()
 }
 
-/*
-fun hexToColor(hex: String, default: String = "#000000"): Color {
+fun hexToColor(theme: Theme, hex: String, default: String = "#000000"): Color {
     var value = hex
     if (hex.isEmpty()) {
         value = default
@@ -352,31 +353,31 @@ fun hexToColor(hex: String, default: String = "#000000"): Color {
 
     if(!hex.startsWith("#")) {
         when(hex) {
-            "primary" -> {value = currentProject.app?.theme?.primary ?: "" }
-            "onPrimary" -> {value = currentProject.app?.theme?.onPrimary ?: "" }
-            "primaryContainer" -> {value = currentProject.app?.theme?.primaryContainer ?: "" }
-            "onPrimaryContainer" -> {value = currentProject.app?.theme?.onPrimaryContainer ?: "" }
-            "surface" -> {value = currentProject.app?.theme?.surface ?: "" }
-            "onSurface" -> {value = currentProject.app?.theme?.onSurface ?: "" }
-            "secondary" -> {value = currentProject.app?.theme?.secondary ?: "" }
-            "onSecondary" -> {value = currentProject.app?.theme?.onSecondary ?: "" }
-            "secondaryContainer" -> {value = currentProject.app?.theme?.secondaryContainer ?: "" }
-            "onSecondaryContainer" -> {value = currentProject.app?.theme?.onSecondaryContainer ?: "" }
-            "tertiary" -> {value = currentProject.app?.theme?.tertiary ?: "" }
-            "onTertiary" -> {value = currentProject.app?.theme?.onTertiary ?: "" }
-            "tertiaryContainer" -> {value = currentProject.app?.theme?.tertiaryContainer ?: "" }
-            "onTertiaryContainer" -> {value = currentProject.app?.theme?.onTertiaryContainer ?: "" }
-            "outline" -> {value = currentProject.app?.theme?.outline ?: "" }
-            "outlineVariant" -> {value = currentProject.app?.theme?.outlineVariant ?: "" }
-            "onErrorContainer" -> {value = currentProject.app?.theme?.onErrorContainer ?: "" }
-            "onError" -> {value = currentProject.app?.theme?.onError ?: "" }
-            "inverseSurface" -> {value = currentProject.app?.theme?.inverseSurface ?: "" }
-            "inversePrimary" -> {value = currentProject.app?.theme?.inversePrimary ?: "" }
-            "inverseOnSurface" -> {value = currentProject.app?.theme?.inverseOnSurface ?: "" }
-            "background" -> {value = currentProject.app?.theme?.background ?: "" }
-            "onBackground" -> {value = currentProject.app?.theme?.onBackground ?: "" }
-            "error" -> {value = currentProject.app?.theme?.error ?: "" }
-            "scrim" -> {value = currentProject.app?.theme?.scrim ?: "" }
+            "primary" -> {value = theme.primary }
+            "onPrimary" -> {value = theme.onPrimary }
+            "primaryContainer" -> {value = theme.primaryContainer }
+            "onPrimaryContainer" -> {value =theme.onPrimaryContainer }
+            "surface" -> {value = theme.surface }
+            "onSurface" -> {value = theme.onSurface }
+            "secondary" -> {value = theme.secondary }
+            "onSecondary" -> {value = theme.onSecondary }
+            "secondaryContainer" -> {value = theme.secondaryContainer }
+            "onSecondaryContainer" -> {value = theme.onSecondaryContainer }
+            "tertiary" -> {value = theme.tertiary }
+            "onTertiary" -> {value = theme.onTertiary }
+            "tertiaryContainer" -> {value = theme.tertiaryContainer }
+            "onTertiaryContainer" -> {value = theme.onTertiaryContainer }
+            "outline" -> {value = theme.outline }
+            "outlineVariant" -> {value = theme.outlineVariant }
+            "onErrorContainer" -> {value = theme.onErrorContainer }
+            "onError" -> {value = theme.onError }
+            "inverseSurface" -> {value = theme.inverseSurface }
+            "inversePrimary" -> {value = theme.inversePrimary }
+            "inverseOnSurface" -> {value = theme.inverseOnSurface }
+            "background" -> {value = theme.background }
+            "onBackground" -> {value = theme.onBackground }
+            "error" -> {value = theme.error }
+            "scrim" -> {value = theme.scrim }
             else -> {value = default}
         }
     }
@@ -400,7 +401,7 @@ fun hexToColor(hex: String, default: String = "#000000"): Color {
         }
         else -> Color.Black
     }
-}*/
+}
 
 fun getFontWeight(node: SmlNode): FontWeight {
     val key = getStringValue(node, "fontWeight", "").trim().lowercase()
