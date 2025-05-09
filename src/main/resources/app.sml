@@ -16,16 +16,16 @@ App {
 
             Lection {
                 label: "Lection 1"
-                link: "http://youtube.com/lection_1"
+                src: "lection_1.sml"
             }
 
             Lection {
                 label: "Lection 2"
-                src: "lection_2.md"
+                src: "lection_2.sml"
             }
             Lection {
                 label: "Lection 3"
-                src: "lection_3.md"
+                src: "lection_3.sml"
             }
         }
 
@@ -34,12 +34,12 @@ App {
 
             Lection {
                 label: "Lection 4"
-                src: "lection_4.md"
+                src: "lection_4.sml"
             }
 
             Lection {
                 label: "Lection 5"
-                src: "lection_5.md"
+                src: "lection_5.sml"
             }
         }
         Topic {
@@ -47,12 +47,12 @@ App {
 
             Lection {
                 label: "Lection 6"
-                src: "lection_6.md"
+                src: "lection_6.sml"
             }
 
             Lection {
                 label: "Lection 7"
-                src: "lection_7.md"
+                src: "lection_7.sml"
             }
         }
     }
