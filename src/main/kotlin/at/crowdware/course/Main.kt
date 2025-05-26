@@ -26,10 +26,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.darkColors
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -182,7 +181,7 @@ fun main() = application {
                                     Spacer(modifier = Modifier.weight(1f))
                                     Text(
                                         text = appTitle,
-                                        color = MaterialTheme.colors.onPrimary,
+                                        color = MaterialTheme.colorScheme.onPrimary,
                                     )
                                     Spacer(modifier = Modifier.weight(1f))
                                 }

@@ -19,7 +19,7 @@
 
 package at.crowdware.course.theme
 
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -44,7 +44,7 @@ fun AppTheme(
 ) {
     // Define Material Colors based on theme
     val colors = if (darkTheme) {
-        MaterialTheme.colors.copy(
+        MaterialTheme.colorScheme.copy(
             primary = PrimaryColorDark,
             secondary = SecondaryColorDark,
             background = BackgroundColorDark,
@@ -54,7 +54,7 @@ fun AppTheme(
             onSurface = OnSurfaceColorDark,
         )
     } else {
-        MaterialTheme.colors.copy(
+        MaterialTheme.colorScheme.copy(
             primary = PrimaryColor,
             secondary = SecondaryColor,
             background = BackgroundColor,
@@ -75,7 +75,7 @@ fun AppTheme(
     // Provide MaterialTheme and ExtendedTheme
     CompositionLocalProvider(LocalExtendedColors provides extendedColors) {
         MaterialTheme(
-            colors = colors,
+            colorScheme = colors,
             typography = AppTypography,
             shapes = AppShapes,
             content = content

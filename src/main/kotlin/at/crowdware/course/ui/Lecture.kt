@@ -21,9 +21,12 @@ package at.crowdware.course.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
@@ -39,6 +42,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import at.crowdware.course.theme.ExtendedTheme
 import at.crowdware.course.util.*
+import chaintech.videoplayer.host.MediaPlayerHost
+import chaintech.videoplayer.ui.video.VideoPlayerComposable
+import java.io.File
 
 @Composable
 fun ShowLecture(theme: Theme, page: String, lang: String) {
@@ -50,7 +56,7 @@ fun ShowLecture(theme: Theme, page: String, lang: String) {
             val padding = getPadding(parsedPage)
             Column(
                 modifier = Modifier.
-                background(MaterialTheme.colors.background).
+                background(MaterialTheme.colorScheme.background).
                 fillMaxSize().
                 padding(top = padding.top.dp, bottom = padding.bottom.dp, start = padding.left.dp, end = padding.right.dp)) {
 
@@ -82,6 +88,9 @@ fun renderElement(theme: Theme, node: SmlNode, lang: String) {
         }
         "Youtube" -> {
             renderYoutube(theme, node)
+        }
+        "Video" -> {
+            renderVideo(node)
         }
         "Button" -> {
             renderButton(theme, node)
@@ -152,6 +161,49 @@ fun renderImage(theme: Theme, node: SmlNode) {
 @Composable
 fun renderYoutube(theme: Theme, node: SmlNode) {
 
+}
+
+
+@Composable
+fun renderVideo(node: SmlNode) {
+    val mediaUrl = remember {
+        val inputStream = object {}.javaClass.classLoader
+            .getResourceAsStream("videos/PeaceInMyHeart.mp4")
+            ?: error("❌ Resource not found!")
+
+        val tempFile = File.createTempFile("video_", ".mp4").apply {
+            deleteOnExit()
+            outputStream().use { output -> inputStream.copyTo(output) }
+        }
+        "file://" + tempFile.absolutePath.replace("\\", "/")
+    }
+
+    val playerHost = remember(mediaUrl) {
+        MediaPlayerHost(mediaUrl = mediaUrl)
+    }
+
+    LaunchedEffect(playerHost) {
+        playerHost.play()
+    }
+
+    // ⏹️ 16:9 Format – oder passe dynamisch an
+    val videoAspectRatio = 16f / 9f
+
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(videoAspectRatio) // 📐 erhält Seitenverhältnis
+        ) {
+            VideoPlayerComposable(
+                modifier = Modifier.fillMaxSize(),
+                playerHost = playerHost
+            )
+        }
+    }
 }
 
 @Composable

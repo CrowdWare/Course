@@ -28,8 +28,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -37,7 +37,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.lerp
-//import androidx.compose.ui.input.pointer.pointerMoveFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerMoveFilter
 import androidx.compose.ui.text.TextStyle
@@ -108,7 +107,7 @@ fun HoverableIconContent(
     onHoverChange: (Boolean) -> Unit,
     tooltipPosition: TooltipPosition
 ) {
-    val lightenedBackgroundColor = LightenColor(MaterialTheme.colors.primary, 0.1f)
+    val lightenedBackgroundColor = LightenColor(MaterialTheme.colorScheme.primary, 0.1f)
 
     Box(
         modifier = Modifier
@@ -128,7 +127,7 @@ fun HoverableIconContent(
         Icon(
             painter = painter,
             contentDescription = "Hoverable Icon",
-            tint = if (isHovered || isSelected) ExtendedTheme.colors.accentColor else MaterialTheme.colors.onPrimary,
+            tint = if (isHovered || isSelected) ExtendedTheme.colors.accentColor else MaterialTheme.colorScheme.onPrimary,
             modifier = Modifier
                 .size(32.dp)
                 .align(Alignment.Center)
@@ -194,7 +193,7 @@ private fun TooltipBubble(
         BasicText(
             text = text,
             style = TextStyle(
-                color = MaterialTheme.colors.onSurface,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontSize = 12.sp
             )
         )

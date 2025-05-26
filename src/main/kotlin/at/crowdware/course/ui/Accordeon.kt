@@ -22,12 +22,12 @@ package at.crowdware.course.ui
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,23 +46,23 @@ fun AccordionItem(entry: AccordionEntry, onClick: (String) -> Unit) {
             .fillMaxWidth()
             .clickable { expanded = !expanded }
             .padding(horizontal = 8.dp, vertical = 4.dp)
-            .background(MaterialTheme.colors.primary)
+            .background(MaterialTheme.colorScheme.primary)
             .animateContentSize()
             .padding(4.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = entry.title,
-                style = MaterialTheme.typography.button,
+                style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.weight(1f),
-                color = MaterialTheme.colors.onPrimary
+                color = MaterialTheme.colorScheme.onPrimary
             )
 
             Icon(
                 imageVector = Icons.Default.KeyboardArrowDown,
                 contentDescription = "Expand",
                 modifier = Modifier.rotate(if (expanded) 180f else 0f),
-                tint = MaterialTheme.colors.onPrimary
+                tint = MaterialTheme.colorScheme.onPrimary
             )
         }
 
@@ -79,8 +79,8 @@ fun AccordionItem(entry: AccordionEntry, onClick: (String) -> Unit) {
                     ) {
                         Text(
                             text = item.label,
-                            style = MaterialTheme.typography.button,
-                            color = MaterialTheme.colors.onPrimary
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
                     }
                 }

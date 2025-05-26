@@ -20,13 +20,12 @@
 package at.crowdware.course.ui
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.res.loadImageBitmap
 import androidx.compose.ui.unit.dp
-import at.crowdware.course.theme.ExtendedTheme
 
 import java.io.InputStream
 
@@ -51,13 +50,13 @@ fun aboutDialog(appName: String, version: String,
                 ) {
                     Text(
                         text = "$appName $version",
-                        style = MaterialTheme.typography.body1,
-                        color = MaterialTheme.colors.onSurface
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text("Copyright © 2025 CrowdWare", style = MaterialTheme.typography.body2, color = MaterialTheme.colors.onSurface)
+                    Text("Copyright © 2025 CrowdWare", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurface)
                     Spacer(modifier = Modifier.height(4.dp))
-                    Text("All rights reserved.", style = MaterialTheme.typography.body2, color = MaterialTheme.colors.onSurface)
+                    Text("All rights reserved.", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurface)
                     Spacer(modifier = Modifier.height(16.dp))
                 }
             }
@@ -66,10 +65,7 @@ fun aboutDialog(appName: String, version: String,
         confirmButton = {
             Button(
                 onClick = onDismissRequest,
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = ExtendedTheme.colors.accentColor,
-                    contentColor = ExtendedTheme.colors.onAccentColor
-                )
+                colors = ButtonDefaults.buttonColors()
             ) {
                 Text("Ok")
             }
