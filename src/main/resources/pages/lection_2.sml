@@ -6,6 +6,6 @@ Page {
         padding: "8"
 
         Markdown { text: "part:lection_2"}
-        Video { src: "tobedefined.mp4"}
+        Video { src: "PeaceInMyHeart.mp4"}
     }
 }

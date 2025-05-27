@@ -43,7 +43,10 @@ import androidx.compose.ui.unit.sp
 import at.crowdware.course.theme.ExtendedTheme
 import at.crowdware.course.util.*
 import chaintech.videoplayer.host.MediaPlayerHost
+import chaintech.videoplayer.model.ScreenResize
+import chaintech.videoplayer.model.VideoPlayerConfig
 import chaintech.videoplayer.ui.video.VideoPlayerComposable
+import chaintech.videoplayer.ui.youtube.YouTubePlayerComposable
 import java.io.File
 
 @Composable
@@ -87,13 +90,10 @@ fun renderElement(theme: Theme, node: SmlNode, lang: String) {
             renderImage(theme, node)
         }
         "Youtube" -> {
-            renderYoutube(theme, node)
+            renderYoutube(node)
         }
         "Video" -> {
             renderVideo(node)
-        }
-        "Button" -> {
-            renderButton(theme, node)
         }
         else -> {
             println("unhandled element: ${node.name}")
@@ -159,16 +159,23 @@ fun renderImage(theme: Theme, node: SmlNode) {
 }
 
 @Composable
-fun renderYoutube(theme: Theme, node: SmlNode) {
+fun renderYoutube(node: SmlNode) {
+    val id = getStringValue(node, "id", "")
+    val playerHost = remember { MediaPlayerHost(mediaUrl = id, isLooping = false) }
 
+    YouTubePlayerComposable(
+        modifier = Modifier.fillMaxSize(),
+        playerHost = playerHost
+    )
 }
 
 
 @Composable
 fun renderVideo(node: SmlNode) {
     val mediaUrl = remember {
+        val src = getStringValue(node, "src", "")
         val inputStream = object {}.javaClass.classLoader
-            .getResourceAsStream("videos/PeaceInMyHeart.mp4")
+            .getResourceAsStream("videos/$src")
             ?: error("❌ Resource not found!")
 
         val tempFile = File.createTempFile("video_", ".mp4").apply {
@@ -179,36 +186,13 @@ fun renderVideo(node: SmlNode) {
     }
 
     val playerHost = remember(mediaUrl) {
-        MediaPlayerHost(mediaUrl = mediaUrl)
+        MediaPlayerHost(mediaUrl = mediaUrl, isLooping = false, initialVideoFitMode = ScreenResize.FIT)
     }
 
-    LaunchedEffect(playerHost) {
-        playerHost.play()
-    }
-
-    // ⏹️ 16:9 Format – oder passe dynamisch an
-    val videoAspectRatio = 16f / 9f
-
-    Box(
+    VideoPlayerComposable(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(videoAspectRatio) // 📐 erhält Seitenverhältnis
-        ) {
-            VideoPlayerComposable(
-                modifier = Modifier.fillMaxSize(),
-                playerHost = playerHost
-            )
-        }
-    }
-}
-
-@Composable
-fun renderButton(theme: Theme, node: SmlNode) {
-
+        playerHost = playerHost
+    )
 }
 
 @Composable
