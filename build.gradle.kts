@@ -29,6 +29,7 @@ dependencies {
     implementation("com.github.h0tk3y.betterParse:better-parse:0.4.4")
     implementation("io.ktor:ktor-serialization-kotlinx-json:3.0.0")
     implementation("network.chaintech:compose-multiplatform-media-player:1.0.40")
+    implementation("org.jetbrains.compose.material:material-icons-extended:1.6.10")
 }
 
 

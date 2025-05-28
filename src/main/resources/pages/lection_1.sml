@@ -6,5 +6,6 @@ Page {
         padding: "8"
 
         Markdown { text: "part:lection_1"}
+        Sound { src: "ScheisseAlternativeRock.mp3" }
     }
 }

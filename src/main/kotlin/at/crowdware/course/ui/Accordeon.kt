@@ -22,12 +22,10 @@ package at.crowdware.course.ui
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -72,6 +70,7 @@ fun AccordionItem(entry: AccordionEntry, onClick: (String) -> Unit) {
                 Button(
                     onClick = {onClick(item.page)},
                     modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(4.dp)
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),

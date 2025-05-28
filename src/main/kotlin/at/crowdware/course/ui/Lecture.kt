@@ -19,16 +19,27 @@
 
 package at.crowdware.course.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.LinearProgressIndicator
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Replay
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.toComposeImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -44,21 +55,29 @@ import at.crowdware.course.theme.ExtendedTheme
 import at.crowdware.course.util.*
 import chaintech.videoplayer.host.MediaPlayerHost
 import chaintech.videoplayer.model.ScreenResize
-import chaintech.videoplayer.model.VideoPlayerConfig
+import chaintech.videoplayer.ui.audio.AudioPlayer
+import chaintech.videoplayer.ui.audio.AudioPlayerComposable
 import chaintech.videoplayer.ui.video.VideoPlayerComposable
 import chaintech.videoplayer.ui.youtube.YouTubePlayerComposable
+import chaintech.videoplayer.util.RetrieveMediaDuration
+import kotlinx.coroutines.delay
+import kotlinx.io.IOException
 import java.io.File
+import javax.imageio.ImageIO
 
 @Composable
 fun ShowLecture(theme: Theme, page: String, lang: String) {
+    val scrollState = rememberScrollState()
     val inputStream = object {}.javaClass.classLoader.getResourceAsStream("pages/$page")
     val content = inputStream?.bufferedReader()?.use { it.readText() }
     if (content != null) {
         val (parsedPage, _) = parseSML(content)
         if (parsedPage != null) {
             val padding = getPadding(parsedPage)
+            val scrollable = getBooleanValue(parsedPage, "scrollable", false)
+            val modifier = if (scrollable) Modifier.verticalScroll(scrollState) else Modifier
             Column(
-                modifier = Modifier.
+                modifier = modifier.
                 background(MaterialTheme.colorScheme.background).
                 fillMaxSize().
                 padding(top = padding.top.dp, bottom = padding.bottom.dp, start = padding.left.dp, end = padding.right.dp)) {
@@ -80,6 +99,9 @@ fun renderElement(theme: Theme, node: SmlNode, lang: String) {
         "Row" -> {
             renderRow(theme, node, lang)
         }
+        "Spacer" -> {
+            renderSpacer(node)
+        }
         "Markdown" -> {
             renderMarkdown(modifier = Modifier, theme, node, lang)
         }
@@ -95,10 +117,112 @@ fun renderElement(theme: Theme, node: SmlNode, lang: String) {
         "Video" -> {
             renderVideo(node)
         }
+        "Sound" -> {
+            renderSound(theme, node)
+        }
         else -> {
             println("unhandled element: ${node.name}")
         }
     }
+}
+
+@Composable
+fun renderSound(theme: Theme, node: SmlNode) {
+    val src = getStringValue(node, "src", "")
+
+    val mediaUrl = remember(src) {
+        if (src.startsWith("http")) {
+            src
+        } else {
+            val inputStream = object {}.javaClass.classLoader
+                .getResourceAsStream("sounds/$src")
+                ?: error("❌ Sound nicht gefunden!")
+
+            val tempFile = File.createTempFile("sound_", ".mp3").apply {
+                deleteOnExit()
+                outputStream().use { output -> inputStream.copyTo(output) }
+            }
+            "file://" + tempFile.absolutePath.replace("\\", "/")
+        }
+    }
+
+    val playerHost = remember(mediaUrl) {
+        MediaPlayerHost(mediaUrl = mediaUrl)
+    }
+
+    var isPlaying by remember { mutableStateOf(false) }
+    var duration by remember { mutableStateOf(1.0) } // Sekunden
+    var position by remember { mutableStateOf(0.0) }
+
+    RetrieveMediaDuration(
+        url = mediaUrl,
+        onDurationRetrieved = {
+            if (it > 0) duration = it
+        }
+    )
+
+    LaunchedEffect(isPlaying) {
+        while (isPlaying) {
+            position += 0.2
+            delay(200)
+        }
+    }
+
+    LaunchedEffect(isPlaying) {
+        if (isPlaying) {
+            playerHost.play()
+        } else {
+            playerHost.pause()
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            playerHost.pause()
+        }
+    }
+
+    Column {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            IconButton(onClick = {
+                isPlaying = !isPlaying
+            }) {
+                Icon(
+                    imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
+                    contentDescription = null,
+                    tint = hexToColor(theme, theme.onBackground)
+                )
+            }
+
+            IconButton(onClick = {
+                playerHost.seekTo(0)
+                position = 0.0
+                isPlaying = true
+            }) {
+                Icon(
+                    imageVector = Icons.Default.Replay,
+                    contentDescription = "Replay",
+                    tint = hexToColor(theme, theme.onBackground)
+                )
+            }
+        }
+
+        LinearProgressIndicator(
+            progress = (position / duration).toFloat().coerceIn(0f, 1f),
+            color = hexToColor(theme, theme.onBackground),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(4.dp)
+        )
+
+        AudioPlayer(playerHost = playerHost)
+    }
+}
+
+@Composable
+fun renderSpacer(node: SmlNode) {
+    val amount = getIntValue(node, "amount", 0)
+    Spacer(modifier = Modifier.width(amount.dp).height(amount.dp))
 }
 
 @Composable
@@ -155,7 +279,26 @@ fun renderText(theme: Theme, node: SmlNode) {
 
 @Composable
 fun renderImage(theme: Theme, node: SmlNode) {
-
+    val scale = getStringValue(node, "scale", "")
+    val padding = getPadding(node)
+    val bitmap = loadImageFromResources("images/" + getStringValue(node, "src", ""))
+    if (bitmap != null) {
+        Image(
+            bitmap = bitmap,
+            contentDescription = null,
+            contentScale = when(scale.lowercase()) {
+                "crop" -> ContentScale.Crop
+                "fit" -> ContentScale.Fit
+                "inside" -> ContentScale.Inside
+                "fillwidth" -> ContentScale.FillWidth
+                "fillbounds" -> ContentScale.FillBounds
+                "fillheight" -> ContentScale.FillHeight
+                "none" -> ContentScale.None
+                else -> ContentScale.Fit
+            }, modifier = Modifier
+                .padding(padding.left.dp, padding.top.dp, padding.right.dp, padding.bottom.dp)
+        )
+    }
 }
 
 @Composable
@@ -467,3 +610,15 @@ val textAlignMap = mapOf(
     "right" to TextAlign.End,
     "" to TextAlign.Start
 )
+
+fun loadImageFromResources(filename: String): ImageBitmap? {
+    return try {
+        val stream = object {}.javaClass.classLoader.getResourceAsStream(filename)
+            ?: return null
+        val bufferedImage = ImageIO.read(stream)
+        bufferedImage.toComposeImageBitmap()
+    } catch (e: IOException) {
+        e.printStackTrace()
+        null
+    }
+}

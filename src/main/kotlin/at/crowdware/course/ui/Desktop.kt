@@ -19,11 +19,22 @@
 
 package at.crowdware.course.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.updateTransition
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import at.crowdware.course.util.getStringValue
@@ -61,11 +72,16 @@ data class Theme(
 fun desktop() {
     val langs = mutableListOf<String>()
     var lang by remember { mutableStateOf("") }
-    var page by remember { mutableStateOf("") }
+    var page by remember { mutableStateOf("home.sml") }
     var theme = Theme()
     val topicList = mutableListOf<AccordionEntry>()
     val inputStream = object {}.javaClass.classLoader.getResourceAsStream("app.sml")
     val content = inputStream?.bufferedReader()?.use { it.readText() }
+    var showAccordion by remember { mutableStateOf(false) }
+    val transition = updateTransition(targetState = showAccordion, label = "AccordionTransition")
+    val width by transition.animateDp(label = "AccordionWidth") { expanded ->
+        if (expanded) 300.dp else 0.dp
+    }
     if (content != null) {
         val (parsedApp, _) = parseSML(content)
         if (parsedApp != null) {
@@ -117,20 +133,46 @@ fun desktop() {
         }
     }
 
-    Row(modifier = Modifier.height(35.dp).padding(8.dp)) {
-        Column(modifier = Modifier.fillMaxWidth()) {
+
+    Column {
+        Row(
+            modifier = Modifier
+                .height(35.dp)
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = { showAccordion = !showAccordion }) {
+                Icon(
+                    imageVector = if (showAccordion) Icons.Default.Close else Icons.Default.Menu,
+                    contentDescription = if (showAccordion) "Close" else "Menu",
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
+            }
             Text("Topics", color = MaterialTheme.colorScheme.onPrimary)
         }
-    }
-    Row (modifier = Modifier.background(MaterialTheme.colorScheme.surface).fillMaxHeight().padding(8.dp)) {
-        Column(modifier = Modifier.width(300.dp)) {
 
-            AccordionList(items = topicList) { p ->
-                page = p
+        Row(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .fillMaxHeight()
+                .padding(8.dp)
+        ) {
+            AnimatedVisibility(
+                visible = showAccordion,
+                enter = expandHorizontally(),
+                exit = shrinkHorizontally()
+            ) {
+                Column(modifier = Modifier.width(width)) {
+                    AccordionList(items = topicList) { p ->
+                        page = p
+                    }
+                }
             }
-        }
-        Column(modifier = Modifier.fillMaxWidth()) {
-            ShowLecture(theme, page, lang)
+
+            Column(modifier = Modifier.fillMaxWidth()) {
+                ShowLecture(theme, page, lang)
+            }
         }
     }
 }
