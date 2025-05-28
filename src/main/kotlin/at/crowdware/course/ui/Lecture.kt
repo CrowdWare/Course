@@ -147,11 +147,11 @@ fun renderSound(theme: Theme, node: SmlNode) {
     }
 
     val playerHost = remember(mediaUrl) {
-        MediaPlayerHost(mediaUrl = mediaUrl)
+        MediaPlayerHost(mediaUrl = mediaUrl, isLooping = false)
     }
 
     var isPlaying by remember { mutableStateOf(false) }
-    var duration by remember { mutableStateOf(1.0) } // Sekunden
+    var duration by remember { mutableStateOf(1.0) }
     var position by remember { mutableStateOf(0.0) }
 
     RetrieveMediaDuration(
@@ -162,9 +162,13 @@ fun renderSound(theme: Theme, node: SmlNode) {
     )
 
     LaunchedEffect(isPlaying) {
-        while (isPlaying) {
+        while (isPlaying && position < duration) {
             position += 0.2
             delay(200)
+        }
+        if (position >= duration) {
+            isPlaying = false
+            position = 0.0
         }
     }
 
