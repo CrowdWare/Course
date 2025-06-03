@@ -30,9 +30,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
-data class Lecture(val label: String, val page: String)
+data class Lecture(val label: String, val src: String, var duration: String, var ready: Boolean = false)
 data class AccordionEntry(val title: String, val content: MutableList<Lecture>)
 
 @Composable
@@ -68,7 +69,7 @@ fun AccordionItem(entry: AccordionEntry, onClick: (String) -> Unit) {
             Spacer(modifier = Modifier.height(8.dp))
             for (item in entry.content) {
                 Button(
-                    onClick = {onClick(item.page)},
+                    onClick = {onClick(item.src)},
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(4.dp)
                 ) {
@@ -81,6 +82,20 @@ fun AccordionItem(entry: AccordionEntry, onClick: (String) -> Unit) {
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onPrimary
                         )
+                        Spacer(modifier = Modifier.weight(1f))
+                        if (item.ready) {
+                            Text(
+                                text = "✅",
+                                style = MaterialTheme.typography.bodySmall,
+                                textAlign = TextAlign.End)
+                        } else {
+                            Text(
+                                text = item.duration.toString(),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                textAlign = TextAlign.End
+                            )
+                        }
                     }
                 }
             }
@@ -95,7 +110,7 @@ fun AccordionList(items: List<AccordionEntry>, onItemClicked: (String) -> Unit) 
         Column(
             modifier = Modifier
                 .verticalScroll(scrollState)
-                .padding(end = 12.dp) // Platz für Scrollbar
+                .padding(end = 12.dp)
         ) {
             items.forEach { entry ->
                 AccordionItem(entry, onClick = onItemClicked)

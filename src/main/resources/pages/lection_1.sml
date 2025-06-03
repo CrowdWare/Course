@@ -5,7 +5,6 @@ Page {
     Column {
         padding: "8"
 
-        Markdown { text: "part:lection_1"}
-        Sound { src: "Scheisse.mp3" }
+        Video { src: "Scene1.mp4" }
     }
 }

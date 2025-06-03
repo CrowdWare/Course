@@ -323,7 +323,7 @@ fun renderVideo(node: SmlNode) {
         val src = getStringValue(node, "src", "")
         val inputStream = object {}.javaClass.classLoader
             .getResourceAsStream("videos/$src")
-            ?: error("❌ Resource not found!")
+            ?: error("❌ Resource not found: $src")
 
         val tempFile = File.createTempFile("video_", ".mp4").apply {
             deleteOnExit()

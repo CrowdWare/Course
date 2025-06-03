@@ -12,20 +12,23 @@ App {
         description: "This is the description"
 
         Topic {
-            label: "Topic 1"
+            label: "Einleitung"
 
             Lection {
-                label: "Lection 1"
+                label: "Willkommen"
                 src: "lection_1.sml"
+                duration: "1:35"
             }
 
             Lection {
                 label: "Lection 2"
                 src: "lection_2.sml"
+                duration: "2:10"
             }
             Lection {
                 label: "Lection 3"
                 src: "lection_3.sml"
+                duration: "1:20"
             }
         }
 
@@ -35,11 +38,13 @@ App {
             Lection {
                 label: "Lection 4"
                 src: "lection_4.sml"
+                duration: "00:10"
             }
 
             Lection {
                 label: "Lection 5"
                 src: "lection_5.sml"
+                duration: "12:45"
             }
         }
         Topic {
@@ -48,11 +53,13 @@ App {
             Lection {
                 label: "Lection 6"
                 src: "lection_6.sml"
+                duration: "5:30"
             }
 
             Lection {
                 label: "Lection 7"
                 src: "lection_7.sml"
+                duration: "8:20"
             }
         }
     }

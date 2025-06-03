@@ -37,6 +37,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import at.crowdware.course.util.getBooleanValue
 import at.crowdware.course.util.getStringValue
 import at.crowdware.course.util.parseSML
 
@@ -69,7 +70,7 @@ data class Theme(
 )
 
 @Composable
-fun desktop() {
+fun desktop(appTitle: MutableState<String>) {
     val langs = mutableListOf<String>()
     var lang by remember { mutableStateOf("") }
     var page by remember { mutableStateOf("home.sml") }
@@ -117,13 +118,22 @@ fun desktop() {
             for(node in parsedApp.children) {
                 if (node.name == "Course") {
                     lang = getStringValue(node, "lang", "")
+                    val name = getStringValue(node, "name", "")
+                    appTitle.value = name
                     langs.add(lang)
 
                     for (topic in node.children) {
                         if (topic.name == "Topic") {
                             val entries = mutableListOf<Lecture>()
-                            for (lection in topic.children) {
-                                entries.add(Lecture(label = getStringValue(lection, "label", ""), page = getStringValue(lection, "src", "")))
+                            for (lecture in topic.children) {
+                                entries.add(
+                                    Lecture(
+                                        label = getStringValue(lecture, "label", ""),
+                                        src = getStringValue(lecture, "src", ""),
+                                        duration = getStringValue(lecture, "duration", ""),
+                                        ready = getBooleanValue(lecture, "ready", false),
+                                    )
+                                )
                             }
                             topicList.add(AccordionEntry(getStringValue(topic, "label", ""), entries))
                         }
@@ -149,7 +159,9 @@ fun desktop() {
                     tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
-            Text("Topics", color = MaterialTheme.colorScheme.onPrimary)
+            if (showAccordion) {
+                Text("Topics", color = MaterialTheme.colorScheme.onPrimary)
+            }
         }
 
         Row(

@@ -60,9 +60,8 @@ import java.io.PrintStream
 private const val APPNAME = "Course"
 
 fun main() = application {
-    println("🔥 application startet!")
-    var appName = APPNAME
-    var appTitle by mutableStateOf("")
+    val appName = APPNAME
+    val appTitle = remember { mutableStateOf("") }
     var isAboutDialogOpen by mutableStateOf(false)
     val appState = createAppState()
     GlobalAppState.appState = appState
@@ -70,7 +69,7 @@ fun main() = application {
     loadAppState(APPNAME)
     appState.theme = "Dark"
 
-    appTitle = appName
+    appTitle.value = appName
     val windowState = rememberWindowState(
         width = (appState.windowWidth).dp,
         height = (appState.windowHeight).dp
@@ -180,7 +179,7 @@ fun main() = application {
                                     }
                                     Spacer(modifier = Modifier.weight(1f))
                                     Text(
-                                        text = appTitle,
+                                        text = appTitle.value,
                                         color = MaterialTheme.colorScheme.onPrimary,
                                     )
                                     Spacer(modifier = Modifier.weight(1f))
@@ -189,7 +188,7 @@ fun main() = application {
                         }
                     }
 
-                    desktop()
+                    desktop(appTitle)
 
                     if (isAboutDialogOpen) {
                         aboutDialog(
