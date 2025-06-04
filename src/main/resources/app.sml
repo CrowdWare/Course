@@ -1,14 +1,12 @@
 App {
-    name: "DemoWorkshop"
-    id: "com.sample.app.DemoWorkshop"
+    id: "at.crowdware.course.ComposeDesktop"
     version: "1.0.0"
     description: "This has to be filled."
     author: "Adam Art Ananda"
 
-
     Course {
         lang: "de"
-        name: "Demo Workshop"
+        name: "Compose Desktop"
         description: "This is the description"
 
         Topic {
@@ -16,39 +14,85 @@ App {
 
             Lection {
                 label: "Willkommen"
-                src: "lection_1.sml"
-                duration: "1:35"
+                src: "welcome.sml"
+                duration: "1:34"
             }
-
             Lection {
-                label: "Lection 2"
-                src: "lection_2.sml"
+                label: "Zielgruppe & Kursziele"
+                src: "target.sml"
                 duration: "2:10"
             }
             Lection {
-                label: "Lection 3"
-                src: "lection_3.sml"
+                label: "Was ist Compose Desktop?"
+                src: "whatis.sml"
+                duration: "1:20"
+            }
+            Lection {
+                label: "Projekt aufsetzen mit IntelliJ + Gradle"
+                src: "setup.sml"
+                duration: "1:20"
+            }
+            Lection {
+                label: "Erste App"
+                src: "firstapp.sml"
                 duration: "1:20"
             }
         }
 
         Topic {
-            label: "Topic 2"
+            label: "Kotlin Grundlagen"
 
             Lection {
-                label: "Lection 4"
-                src: "lection_4.sml"
-                duration: "00:10"
+                label: "Variablen"
+                src: "vars.sml"
+                duration: "03:02"
             }
 
             Lection {
-                label: "Lection 5"
-                src: "lection_5.sml"
-                duration: "12:45"
+                label: "Ausdrücke"
+                src: "expressions.sml"
+                duration: "02:32"
+            }
+            Lection {
+                label: "Funktionen"
+                src: "fun1.sml"
+                duration: "01:37"
+            }
+            Lection {
+                label: "Funktionen2"
+                src: "fun2.sml"
+                duration: ""
+            }
+            Lection {
+                label: "Funktionen3"
+                src: "fun3.sml"
+                duration: ""
+            }
+            Lection {
+                label: "Bedingungen"
+                src: "loops.sml"
+                duration: ""
+            }
+            Lection {
+                label: "Switches"
+                src: "when.sml"
+                duration: ""
+            }
+            Lection {
+                label: "Klassen, Datenklassen, Sealed Classes"
+                src: "classes.sml"
+                duration: ""
+            }
+
+            Lection {
+                label: "Extensions & Top-Level-Funktionen"
+                src: "extensions.sml"
+                duration: ""
             }
         }
+
         Topic {
-            label: "Topic 3"
+            label: "Erste App"
 
             Lection {
                 label: "Lection 6"
@@ -61,6 +105,26 @@ App {
                 src: "lection_7.sml"
                 duration: "8:20"
             }
+        }
+
+        Topic {
+            label: "Layouts und Navigation"
+        }
+
+        Topic {
+            label: "Systemintegration & Desktop Features"
+        }
+
+        Topic {
+            label: "Stil & Themes"
+        }
+
+        Topic {
+            label: "Zweite App"
+        }
+
+        Topic {
+            label: "Verteilung & Packetierung"
         }
     }
 

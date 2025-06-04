@@ -319,8 +319,8 @@ fun renderYoutube(node: SmlNode) {
 
 @Composable
 fun renderVideo(node: SmlNode) {
-    val mediaUrl = remember {
-        val src = getStringValue(node, "src", "")
+    val src = getStringValue(node, "src", "")
+    val mediaUrl = remember(src) {
         val inputStream = object {}.javaClass.classLoader
             .getResourceAsStream("videos/$src")
             ?: error("❌ Resource not found: $src")
@@ -332,8 +332,15 @@ fun renderVideo(node: SmlNode) {
         "file://" + tempFile.absolutePath.replace("\\", "/")
     }
 
-    val playerHost = remember(mediaUrl) {
+    val playerHost = remember(src) {
         MediaPlayerHost(mediaUrl = mediaUrl, isLooping = false, initialVideoFitMode = ScreenResize.FIT)
+    }
+
+    DisposableEffect(src) {
+        onDispose {
+            println("onDispose")
+            playerHost.pause()
+        }
     }
 
     VideoPlayerComposable(

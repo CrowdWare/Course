@@ -81,7 +81,7 @@ fun desktop(appTitle: MutableState<String>) {
     var showAccordion by remember { mutableStateOf(false) }
     val transition = updateTransition(targetState = showAccordion, label = "AccordionTransition")
     val width by transition.animateDp(label = "AccordionWidth") { expanded ->
-        if (expanded) 300.dp else 0.dp
+        if (expanded) 450.dp else 0.dp
     }
     if (content != null) {
         val (parsedApp, _) = parseSML(content)
