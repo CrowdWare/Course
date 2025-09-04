@@ -53,10 +53,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import at.crowdware.course.theme.ExtendedTheme
 import at.crowdware.course.util.*
+import chaintech.videoplayer.host.MediaPlayerEvent
 import chaintech.videoplayer.host.MediaPlayerHost
 import chaintech.videoplayer.model.ScreenResize
 import chaintech.videoplayer.ui.audio.AudioPlayer
-import chaintech.videoplayer.ui.audio.AudioPlayerComposable
 import chaintech.videoplayer.ui.video.VideoPlayerComposable
 import chaintech.videoplayer.ui.youtube.YouTubePlayerComposable
 import chaintech.videoplayer.util.RetrieveMediaDuration
@@ -66,7 +66,7 @@ import java.io.File
 import javax.imageio.ImageIO
 
 @Composable
-fun ShowLecture(theme: Theme, page: String, lang: String) {
+fun ShowLecture(theme: Theme, page: String, lang: String, onProgressChanged: (Double) -> Unit) {
     val scrollState = rememberScrollState()
     val inputStream = object {}.javaClass.classLoader.getResourceAsStream("pages/$page")
     val content = inputStream?.bufferedReader()?.use { it.readText() }
@@ -83,7 +83,7 @@ fun ShowLecture(theme: Theme, page: String, lang: String) {
                 padding(top = padding.top.dp, bottom = padding.bottom.dp, start = padding.left.dp, end = padding.right.dp)) {
 
                 for (element in parsedPage.children) {
-                    renderElement(theme, element, lang)
+                    renderElement(theme, element, lang, onProgressChanged)
                 }
             }
         }
@@ -91,13 +91,13 @@ fun ShowLecture(theme: Theme, page: String, lang: String) {
 }
 
 @Composable
-fun renderElement(theme: Theme, node: SmlNode, lang: String) {
+fun renderElement(theme: Theme, node: SmlNode, lang: String,  onProgressChanged: (Double) -> Unit) {
     when (node.name) {
         "Column" -> {
-            renderColumn(theme, node, lang)
+            renderColumn(theme, node, lang, onProgressChanged)
         }
         "Row" -> {
-            renderRow(theme, node, lang)
+            renderRow(theme, node, lang, onProgressChanged)
         }
         "Spacer" -> {
             renderSpacer(node)
@@ -115,7 +115,7 @@ fun renderElement(theme: Theme, node: SmlNode, lang: String) {
             renderYoutube(node)
         }
         "Video" -> {
-            renderVideo(node)
+            renderVideo(node,  onProgressChanged)
         }
         "Sound" -> {
             renderSound(theme, node)
@@ -230,21 +230,21 @@ fun renderSpacer(node: SmlNode) {
 }
 
 @Composable
-fun renderColumn(theme: Theme, node: SmlNode, lang: String) {
+fun renderColumn(theme: Theme, node: SmlNode, lang: String, onProgressChanged: (Double) -> Unit) {
     val padding = getPadding(node)
     Column(modifier = Modifier.padding(top = padding.top.dp, bottom = padding.bottom.dp, start = padding.left.dp, end = padding.right.dp)) {
         for (n in node.children) {
-            renderElement(theme, n, lang)
+            renderElement(theme, n, lang, onProgressChanged)
         }
     }
 }
 
 @Composable
-fun renderRow(theme: Theme, node: SmlNode, lang: String) {
+fun renderRow(theme: Theme, node: SmlNode, lang: String, onProgressChanged: (Double) -> Unit) {
     val padding = getPadding(node)
     Row(modifier = Modifier.padding(top = padding.top.dp, bottom = padding.bottom.dp, start = padding.left.dp, end = padding.right.dp)) {
         for (n in node.children) {
-            renderElement(theme, n, lang)
+            renderElement(theme, n, lang, onProgressChanged)
         }
     }
 }
@@ -318,7 +318,7 @@ fun renderYoutube(node: SmlNode) {
 
 
 @Composable
-fun renderVideo(node: SmlNode) {
+fun renderVideo(node: SmlNode, onProgressChanged: (Double) -> Unit) {
     val src = getStringValue(node, "src", "")
     val mediaUrl = remember(src) {
         val inputStream = object {}.javaClass.classLoader
@@ -332,8 +332,24 @@ fun renderVideo(node: SmlNode) {
         "file://" + tempFile.absolutePath.replace("\\", "/")
     }
 
+    var duration by remember { mutableStateOf(1.0) }
+
+    RetrieveMediaDuration(
+        url = mediaUrl,
+        onDurationRetrieved = {
+            if (it > 0) duration = it
+        }
+    )
+
     val playerHost = remember(src) {
         MediaPlayerHost(mediaUrl = mediaUrl, isLooping = false, initialVideoFitMode = ScreenResize.FIT)
+    }
+
+    playerHost.onEvent  = { event ->
+        when(event) {
+            is MediaPlayerEvent.CurrentTimeChange -> { onProgressChanged(event.currentTime / duration) }
+            else -> {}
+        }
     }
 
     DisposableEffect(src) {

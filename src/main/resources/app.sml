@@ -13,29 +13,19 @@ App {
             label: "Einleitung"
 
             Lection {
-                label: "Willkommen"
+                label: "Begrüssung"
                 src: "welcome.sml"
-                duration: "1:34"
+                duration: "01:08"
             }
             Lection {
                 label: "Zielgruppe & Kursziele"
                 src: "target.sml"
-                duration: "2:10"
+                duration: ""
             }
             Lection {
                 label: "Was ist Compose Desktop?"
                 src: "whatis.sml"
-                duration: "1:20"
-            }
-            Lection {
-                label: "Projekt aufsetzen mit IntelliJ + Gradle"
-                src: "setup.sml"
-                duration: "1:20"
-            }
-            Lection {
-                label: "Erste App"
-                src: "firstapp.sml"
-                duration: "1:20"
+                duration: "06:41"
             }
         }
 
@@ -47,70 +37,162 @@ App {
                 src: "vars.sml"
                 duration: "03:02"
             }
-
             Lection {
                 label: "Ausdrücke"
                 src: "expressions.sml"
                 duration: "02:32"
             }
             Lection {
-                label: "Funktionen"
+                label: "Kommentare"
+                src: "kommentare.sml"
+                duration: "01:39"
+            }
+            Lection {
+                label: "Funktionen (Teil 1)"
                 src: "fun1.sml"
                 duration: "01:37"
             }
             Lection {
-                label: "Funktionen2"
+                label: "Funktionen (Teil 2)"
                 src: "fun2.sml"
-                duration: ""
+                duration: "01:43"
             }
             Lection {
-                label: "Funktionen3"
+                label: "Funktionen (Teil 3)"
                 src: "fun3.sml"
-                duration: ""
+                duration: "01:46"
             }
             Lection {
                 label: "Bedingungen"
+                src: "bedingungen.sml"
+                duration: "03:16"
+            }
+            Lection {
+                label: "Loops"
                 src: "loops.sml"
-                duration: ""
+                duration: "02:28"
             }
             Lection {
-                label: "Switches"
+                label: "When"
                 src: "when.sml"
-                duration: ""
+                duration: "04:31"
             }
             Lection {
-                label: "Klassen, Datenklassen, Sealed Classes"
+                label: "Datenklassen"
+                src: "dataclasses.sml"
+                duration: "02:28"
+            }
+            Lection {
+                label: "Klassen"
                 src: "classes.sml"
-                duration: ""
+                duration: "03:36"
             }
-
             Lection {
-                label: "Extensions & Top-Level-Funktionen"
-                src: "extensions.sml"
-                duration: ""
+                label: "Abschluss"
+                src: "abschluss.sml"
+                duration: "02:39"
             }
         }
 
         Topic {
-            label: "Erste App"
+            label: "Erste Compose App"
 
             Lection {
-                label: "Lection 6"
-                src: "lection_6.sml"
-                duration: "5:30"
+                label: "Einführung"
+                src: "einfuehrung.sml"
+                duration: "06:41"
+            }
+            Lection {
+                label: "Text Eingabe"
+                src: "texteingabe.sml"
+                duration: "05:11"
+            }
+            Lection {
+                label: "Layout mit Spalten und Zeilen"
+                src: "layout.sml"
+                duration: "04:19"
             }
 
             Lection {
-                label: "Lection 7"
+                label: "Texte und Buttons"
                 src: "lection_7.sml"
-                duration: "8:20"
+                duration: ""
+            }
+            Lection {
+                label: "Eingabefeld & Zustand"
+                src: "lection_7.sml"
+                duration: ""
+            }
+            Lection {
+                label: "Einfache Logik und Bedingungen"
+                src: "lection_7.sml"
+                duration: ""
+            }
+            Lection {
+                label: "Styling & Theme"
+                src: "lection_7.sml"
+                duration: ""
+            }
+            Lection {
+                label: "Projekt strukturieren"
+                src: "lection_7.sml"
+                duration: ""
+            }
+            Lection {
+                label: "Projekt strukturieren"
+                src: "lection_7.sml"
+                duration: ""
+            }
+            Lection {
+                label: "About Dialog"
+                src: "lection_7.sml"
+                duration: ""
             }
         }
 
         Topic {
             label: "Layouts und Navigation"
         }
+        Topic {
+            label: "Controls"
 
+            Lection {
+                label: "Text"
+                src: "text.sml"
+                duration: ""
+            }
+            Lection {
+                label: "Button"
+                src: "button.sml"
+                duration: ""
+            }
+            Lection {
+                label: "Treeview"
+                src: "treeview.sml"
+                duration: ""
+            }
+            Lection {
+                label: "LazyColumn"
+                src: "lazycolumn.sml"
+                duration: ""
+            }
+            Lection {
+                label: "LazyRow"
+                src: "lazyrow.sml"
+                duration: ""
+            }
+            Lection {
+                label: "Akkordeon"
+                src: "akkordeon.sml"
+                duration: ""
+            }
+            Lection {
+                label: "Video"
+                src: "video.sml"
+                duration: ""
+            }
+
+        }
         Topic {
             label: "Systemintegration & Desktop Features"
         }

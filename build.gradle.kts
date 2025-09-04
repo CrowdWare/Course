@@ -17,9 +17,7 @@ repositories {
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     maven("https://jogamp.org/deployment/maven/")
     maven("https://maven.pkg.jetbrains.space/public/p/skiko/maven")
-
 }
-
 dependencies {
     implementation(compose.desktop.currentOs)
     implementation("org.jetbrains.skiko:skiko-awt-runtime-macos-arm64:0.9.4.2")
@@ -31,8 +29,6 @@ dependencies {
     implementation("network.chaintech:compose-multiplatform-media-player:1.0.40")
     implementation("org.jetbrains.compose.material:material-icons-extended:1.6.10")
 }
-
-
 application {
     mainClass.set("at.crowdware.course.MainKt") // ✅ dein Entry-Point
 }

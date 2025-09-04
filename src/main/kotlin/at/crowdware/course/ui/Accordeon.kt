@@ -37,7 +37,7 @@ data class Lecture(val label: String, val src: String, var duration: String, var
 data class AccordionEntry(val title: String, val content: MutableList<Lecture>)
 
 @Composable
-fun AccordionItem(entry: AccordionEntry, onClick: (String) -> Unit) {
+fun AccordionItem(entry: AccordionEntry, onClick: (Lecture) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
 
     Column(
@@ -69,7 +69,7 @@ fun AccordionItem(entry: AccordionEntry, onClick: (String) -> Unit) {
             Spacer(modifier = Modifier.height(8.dp))
             for (item in entry.content) {
                 Button(
-                    onClick = {onClick(item.src)},
+                    onClick = {onClick(item)},
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(4.dp)
                 ) {
@@ -104,7 +104,7 @@ fun AccordionItem(entry: AccordionEntry, onClick: (String) -> Unit) {
 }
 
 @Composable
-fun AccordionList(items: List<AccordionEntry>, onItemClicked: (String) -> Unit) {
+fun AccordionList(items: List<AccordionEntry>, onItemClicked: (Lecture) -> Unit) {
     val scrollState = rememberScrollState()
     Box(modifier = Modifier.fillMaxSize()) {
         Column(

@@ -29,10 +29,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -73,7 +70,7 @@ data class Theme(
 fun desktop(appTitle: MutableState<String>) {
     val langs = mutableListOf<String>()
     var lang by remember { mutableStateOf("") }
-    var page by remember { mutableStateOf("home.sml") }
+    var lecture by remember { mutableStateOf(Lecture("", "home.sml", "")) }
     var theme = Theme()
     val topicList = mutableListOf<AccordionEntry>()
     val inputStream = object {}.javaClass.classLoader.getResourceAsStream("app.sml")
@@ -176,14 +173,18 @@ fun desktop(appTitle: MutableState<String>) {
                 exit = shrinkHorizontally()
             ) {
                 Column(modifier = Modifier.width(width)) {
-                    AccordionList(items = topicList) { p ->
-                        page = p
+                    AccordionList(items = topicList) { l ->
+                        lecture = l
                     }
                 }
             }
 
             Column(modifier = Modifier.fillMaxWidth()) {
-                ShowLecture(theme, page, lang)
+                ShowLecture(theme, lecture.src, lang, onProgressChanged = { progress ->
+                    // hier sollte der Wert gespeichert werden, um zu sehen, wenn Lektion abgeschlossen ist
+                    val prozent = (progress * 100).toInt()
+                    println("Fortschritt: $prozent%")
+                })
             }
         }
     }
