@@ -122,54 +122,10 @@ App {
                 src: "imports.sml"
                 duration: ""
             }
-            Lection {
-                label: "Styling & Theme"
-                src: "lection_7.sml"
-                duration: ""
-            }
-            Lection {
-                label: "Todo App"
-                src: "lection_7.sml"
-                duration: ""
-            }
-            Lection {
-                label: "Paketierung"
-                src: "lection_7.sml"
-                duration: ""
-            }
-        }
-
-        Topic {
-            label: "Layouts und Navigation"
         }
         Topic {
             label: "Controls"
 
-            Lection {
-                label: "Text"
-                src: "text.sml"
-                duration: ""
-            }
-            Lection {
-                label: "Button"
-                src: "button.sml"
-                duration: ""
-            }
-            Lection {
-                label: "Treeview"
-                src: "treeview.sml"
-                duration: ""
-            }
-            Lection {
-                label: "LazyColumn"
-                src: "lazycolumn.sml"
-                duration: ""
-            }
-            Lection {
-                label: "LazyRow"
-                src: "lazyrow.sml"
-                duration: ""
-            }
             Lection {
                 label: "Akkordeon"
                 src: "akkordeon.sml"
@@ -180,20 +136,37 @@ App {
                 src: "video.sml"
                 duration: ""
             }
-
+            Lection {
+                label: "Treeview"
+                src: "treeview.sml"
+                duration: ""
+            }
         }
         Topic {
             label: "Systemintegration & Desktop Features"
-        }
 
+            Lection {
+                label: "Windows"
+                src: "treeview.sml"
+                duration: ""
+            }
+            Lection {
+                label: "Mac"
+                src: "treeview.sml"
+                duration: ""
+            }
+            Lection {
+                label: "Linux"
+                src: "treeview.sml"
+                duration: ""
+            }
+        }
         Topic {
-            label: "Stil & Themes"
+            label: "Stile & Themes"
         }
-
         Topic {
-            label: "Zweite App"
+            label: "Todo App"
         }
-
         Topic {
             label: "Verteilung & Packetierung"
         }
