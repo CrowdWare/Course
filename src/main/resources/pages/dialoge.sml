@@ -4,6 +4,6 @@ Page {
     Column {
         padding: "8"
 
-        Video { src: "Kursziel.mp4" }
+        Video { src: "Dialoge.mp4" }
     }
 }

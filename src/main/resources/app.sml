@@ -20,7 +20,7 @@ App {
             Lection {
                 label: "Zielgruppe & Kursziele"
                 src: "target.sml"
-                duration: ""
+                duration: "01:39"
             }
             Lection {
                 label: "Was ist Compose Desktop?"
@@ -112,20 +112,14 @@ App {
                 src: "layout.sml"
                 duration: "04:19"
             }
-
             Lection {
-                label: "Texte und Buttons"
-                src: "lection_7.sml"
+                label: "Dialoge"
+                src: "dialoge.sml"
                 duration: ""
             }
             Lection {
-                label: "Eingabefeld & Zustand"
-                src: "lection_7.sml"
-                duration: ""
-            }
-            Lection {
-                label: "Einfache Logik und Bedingungen"
-                src: "lection_7.sml"
+                label: "Imports"
+                src: "imports.sml"
                 duration: ""
             }
             Lection {
@@ -134,17 +128,12 @@ App {
                 duration: ""
             }
             Lection {
-                label: "Projekt strukturieren"
+                label: "Todo App"
                 src: "lection_7.sml"
                 duration: ""
             }
             Lection {
-                label: "Projekt strukturieren"
-                src: "lection_7.sml"
-                duration: ""
-            }
-            Lection {
-                label: "About Dialog"
+                label: "Paketierung"
                 src: "lection_7.sml"
                 duration: ""
             }
