@@ -24,6 +24,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
@@ -66,7 +67,7 @@ import java.io.File
 import javax.imageio.ImageIO
 
 @Composable
-fun ShowLecture(theme: Theme, page: String, lang: String, onProgressChanged: (Double) -> Unit) {
+fun ShowLecture(theme: Theme, page: String, lang: String, demoDir: File, onProgressChanged: (Double) -> Unit) {
     val scrollState = rememberScrollState()
     val inputStream = object {}.javaClass.classLoader.getResourceAsStream("pages/$page")
     val content = inputStream?.bufferedReader()?.use { it.readText() }
@@ -83,7 +84,7 @@ fun ShowLecture(theme: Theme, page: String, lang: String, onProgressChanged: (Do
                 padding(top = padding.top.dp, bottom = padding.bottom.dp, start = padding.left.dp, end = padding.right.dp)) {
 
                 for (element in parsedPage.children) {
-                    renderElement(theme, element, lang, onProgressChanged)
+                    renderElement(theme, element, lang, demoDir, onProgressChanged)
                 }
             }
         }
@@ -91,13 +92,13 @@ fun ShowLecture(theme: Theme, page: String, lang: String, onProgressChanged: (Do
 }
 
 @Composable
-fun renderElement(theme: Theme, node: SmlNode, lang: String,  onProgressChanged: (Double) -> Unit) {
+fun renderElement(theme: Theme, node: SmlNode, lang: String, demoDir: File, onProgressChanged: (Double) -> Unit) {
     when (node.name) {
         "Column" -> {
-            renderColumn(theme, node, lang, onProgressChanged)
+            renderColumn(theme, node, lang, demoDir, onProgressChanged)
         }
         "Row" -> {
-            renderRow(theme, node, lang, onProgressChanged)
+            renderRow(theme, node, lang, demoDir, onProgressChanged)
         }
         "Spacer" -> {
             renderSpacer(node)
@@ -110,6 +111,9 @@ fun renderElement(theme: Theme, node: SmlNode, lang: String,  onProgressChanged:
         }
         "Image" -> {
             renderImage(theme, node)
+        }
+        "Button" -> {
+            renderButton(theme, node, demoDir)
         }
         "Youtube" -> {
             renderYoutube(node)
@@ -230,21 +234,21 @@ fun renderSpacer(node: SmlNode) {
 }
 
 @Composable
-fun renderColumn(theme: Theme, node: SmlNode, lang: String, onProgressChanged: (Double) -> Unit) {
+fun renderColumn(theme: Theme, node: SmlNode, lang: String, demoDir: File, onProgressChanged: (Double) -> Unit) {
     val padding = getPadding(node)
     Column(modifier = Modifier.padding(top = padding.top.dp, bottom = padding.bottom.dp, start = padding.left.dp, end = padding.right.dp)) {
         for (n in node.children) {
-            renderElement(theme, n, lang, onProgressChanged)
+            renderElement(theme, n, lang, demoDir, onProgressChanged)
         }
     }
 }
 
 @Composable
-fun renderRow(theme: Theme, node: SmlNode, lang: String, onProgressChanged: (Double) -> Unit) {
+fun renderRow(theme: Theme, node: SmlNode, lang: String, demoDir: File, onProgressChanged: (Double) -> Unit) {
     val padding = getPadding(node)
     Row(modifier = Modifier.padding(top = padding.top.dp, bottom = padding.bottom.dp, start = padding.left.dp, end = padding.right.dp)) {
         for (n in node.children) {
-            renderElement(theme, n, lang, onProgressChanged)
+            renderElement(theme, n, lang, demoDir, onProgressChanged)
         }
     }
 }
@@ -279,6 +283,20 @@ fun renderMarkdown(modifier: Modifier = Modifier, theme: Theme, node: SmlNode, l
 fun renderText(theme: Theme, node: SmlNode) {
     val text = getStringValue(node, "text", "")
     Text(text)
+}
+
+@Composable
+fun renderButton(theme: Theme, node: SmlNode, demoDir: File) {
+    val link = getStringValue(node, "link", "")
+    val cmd = link.substringAfter("run:")
+    val exe = cmd.split(" ")
+    Button(onClick = {
+        println("exe ${exe[1]} arg ${exe[2]}")
+        val app = File(demoDir, exe[1])
+        ProcessBuilder(app.absolutePath, exe[2]).inheritIO().start()
+    }) {
+        Text(getStringValue(node, "label", ""))
+    }
 }
 
 @Composable
@@ -360,7 +378,7 @@ fun renderVideo(node: SmlNode, onProgressChanged: (Double) -> Unit) {
     }
 
     VideoPlayerComposable(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.aspectRatio(16f / 9f),
         playerHost = playerHost
     )
 }

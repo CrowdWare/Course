@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import at.crowdware.course.util.getBooleanValue
 import at.crowdware.course.util.getStringValue
 import at.crowdware.course.util.parseSML
+import java.io.File
 
 data class Theme(
     var primary: String = "",
@@ -67,7 +68,7 @@ data class Theme(
 )
 
 @Composable
-fun desktop(appTitle: MutableState<String>) {
+fun desktop(appTitle: MutableState<String>, demoDir: File) {
     val langs = mutableListOf<String>()
     var lang by remember { mutableStateOf("") }
     var lecture by remember { mutableStateOf(Lecture("", "home.sml", "")) }
@@ -180,7 +181,7 @@ fun desktop(appTitle: MutableState<String>) {
             }
 
             Column(modifier = Modifier.fillMaxWidth()) {
-                ShowLecture(theme, lecture.src, lang, onProgressChanged = { progress ->
+                ShowLecture(theme, lecture.src, lang, demoDir, onProgressChanged = { progress ->
                     // hier sollte der Wert gespeichert werden, um zu sehen, wenn Lektion abgeschlossen ist
                     val prozent = (progress * 100).toInt()
                     println("Fortschritt: $prozent%")

@@ -55,7 +55,8 @@ import java.awt.Window
 import java.io.File
 import java.io.IOException
 import java.io.PrintStream
-
+import java.nio.file.Files
+import java.util.jar.JarFile
 
 private const val APPNAME = "Course"
 
@@ -74,6 +75,9 @@ fun main() = application {
         width = (appState.windowWidth).dp,
         height = (appState.windowHeight).dp
     )
+
+    val demoDir = extractDemoResources()
+    println("demo ${demoDir.absolutePath}")
 
     if (appState.theme.isEmpty())
         appState.theme = if (androidx.compose.foundation.isSystemInDarkTheme()) "Dark" else "Light"
@@ -103,6 +107,7 @@ fun main() = application {
             }
         }
     }
+
 
     Window(
         onCloseRequest = { isAskingToClose = true },
@@ -188,7 +193,7 @@ fun main() = application {
                         }
                     }
 
-                    desktop(appTitle)
+                    desktop(appTitle, demoDir)
 
                     if (isAboutDialogOpen) {
                         aboutDialog(
@@ -321,4 +326,49 @@ fun loadAppState(path: String) {
             )
         }
     }
+}
+
+
+fun extractDemoResources(): File {
+    // Ziel-Temp-Dir erzeugen
+    val tempDir = Files.createTempDirectory("demoResources").toFile()
+    tempDir.deleteOnExit()
+
+    // Prüfen, ob wir im JAR oder im Build-Verzeichnis laufen
+    val url = object {}.javaClass.getResource("/demo")
+        ?: throw IllegalArgumentException("Resource folder /demo not found")
+
+    if (url.protocol == "jar") {
+        // Ressourcen aus JAR extrahieren
+        val jarPath = url.path.substringAfter("file:").substringBefore("!")
+        JarFile(jarPath).use { jar ->
+            jar.entries().asSequence()
+                .filter { it.name.startsWith("demo/") && !it.isDirectory }
+                .forEach { entry ->
+                    val targetFile = File(tempDir, entry.name.removePrefix("demo/"))
+                    targetFile.parentFile.mkdirs()
+                    jar.getInputStream(entry).use { input ->
+                        targetFile.outputStream().use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+                    targetFile.setExecutable(true)
+                }
+        }
+    } else {
+        // Dev-Modus: echte Dateien im build/resources/main
+        val dir = File(url.toURI())
+        val basePath = dir.toPath() // CHANGE
+        dir.walkTopDown()
+            .filter { it.isFile }
+            .forEach { file ->
+                val rel = basePath.relativize(file.toPath()).toString() // CHANGE
+                val targetFile = File(tempDir, rel) // CHANGE
+                targetFile.parentFile?.mkdirs() // CHANGE
+                file.copyTo(targetFile, overwrite = true)
+                targetFile.setExecutable(true)
+            }
+    }
+
+    return tempDir
 }
