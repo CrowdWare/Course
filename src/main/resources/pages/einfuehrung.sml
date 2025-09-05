@@ -7,9 +7,9 @@ Page {
         Video { src: "JCEinführung.mp4" }
         Spacer { amount: 8}
         Row {
-            Button { label: "Anwendung starten" link: "run: at.crowdware.jetpackdesktop.demo.app/contents/MacOS/at.crowdware.jetpackdesktop.demo 1" }
-            Spacer { amount: 8}
-            Button { label: "Anwendung starten" link: "run: at.crowdware.jetpackdesktop.demo.app/contents/MacOS/at.crowdware.jetpackdesktop.demo 2" }
+            Button { label: "Beispiel-Anwendung starten" link: "run: at.crowdware.jetpackdesktop.demo.app/contents/MacOS/at.crowdware.jetpackdesktop.demo 1" }
+            Spacer { amount: 16 }
+            Button { label: "Lektion als abgeschlossen markieren" link: "finished" }
         }
     }
 }

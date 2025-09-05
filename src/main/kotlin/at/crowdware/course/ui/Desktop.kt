@@ -73,17 +73,55 @@ fun desktop(appTitle: MutableState<String>, demoDir: File) {
     var lang by remember { mutableStateOf("") }
     var lecture by remember { mutableStateOf(Lecture("", "home.sml", "")) }
     var theme = Theme()
-    val topicList = mutableListOf<AccordionEntry>()
-    val inputStream = object {}.javaClass.classLoader.getResourceAsStream("app.sml")
-    val content = inputStream?.bufferedReader()?.use { it.readText() }
+    val topicList = remember { mutableStateListOf<AccordionEntry>() }
+    val bundledSml by remember {
+        mutableStateOf(
+            object {}.javaClass.classLoader
+                .getResourceAsStream("app.sml")
+                ?.bufferedReader()?.use { it.readText() }
+                .orEmpty()
+        )
+    }
+    var courseId by remember {
+        mutableStateOf(
+            parseSML(bundledSml).first
+                ?.let { getStringValue(it, "id", "default") }
+                ?: "default"
+        )
+    }
+    val appSmlFile = remember(courseId) {
+        val userHome = System.getProperty("user.home")
+        val dir = File(File(userHome, ".course"), courseId).apply { mkdirs() }
+        File(dir, "app.sml")
+    }
     var showAccordion by remember { mutableStateOf(false) }
     val transition = updateTransition(targetState = showAccordion, label = "AccordionTransition")
     val width by transition.animateDp(label = "AccordionWidth") { expanded ->
         if (expanded) 450.dp else 0.dp
     }
-    if (content != null) {
+
+    LaunchedEffect(courseId) {
+        if (!appSmlFile.exists()) {
+            appSmlFile.parentFile?.mkdirs()
+            appSmlFile.writeText(bundledSml)
+        }
+    }
+    var content by remember { mutableStateOf("") }
+    LaunchedEffect(courseId) {
+        if (!appSmlFile.exists()) {
+            appSmlFile.parentFile?.mkdirs()
+            appSmlFile.writeText(bundledSml)
+        }
+        content = appSmlFile.readText()
+    }
+
+    LaunchedEffect(content) {
+        if (content.isEmpty()) return@LaunchedEffect
         val (parsedApp, _) = parseSML(content)
-        if (parsedApp != null) {
+        parsedApp?.let {
+            courseId = getStringValue(it, "id", courseId)
+            topicList.clear()
+            langs.clear()
             for (node in parsedApp.children) {
                 if (node.name == "Theme") {
                     theme.primary = getStringValue(node, "primary", "")
@@ -181,12 +219,74 @@ fun desktop(appTitle: MutableState<String>, demoDir: File) {
             }
 
             Column(modifier = Modifier.fillMaxWidth()) {
-                ShowLecture(theme, lecture.src, lang, demoDir, onProgressChanged = { progress ->
-                    // hier sollte der Wert gespeichert werden, um zu sehen, wenn Lektion abgeschlossen ist
-                    val prozent = (progress * 100).toInt()
-                    println("Fortschritt: $prozent%")
+                ShowLecture(theme, lecture.src, lang, demoDir, onFinished = {
+                    val updated = lecture.copy(ready = true)
+                    lecture = updated
+
+                    val text0 = appSmlFile.readText()
+                    val newText = setLectionReadyInSml(text0, updated.src)
+                    if (newText != text0) {
+                        appSmlFile.writeText(newText)
+                        content = newText
+                    }
                 })
             }
         }
+    }
+}
+
+// CHANGE: add helper to set `ready: true` inside the matching `Lection { ... }` block
+private fun setLectionReadyInSml(text: String, src: String): String {
+    val m = Regex("""\bsrc\s*:\s*["']${Regex.escape(src)}["']""").find(text) ?: return text
+    val head = text.substring(0, m.range.first)
+    val lectionMatch = Regex("""Lection\s*\{""").findAll(head).lastOrNull() ?: return text
+    val braceStart = text.indexOf('{', lectionMatch.range.first)
+    if (braceStart < 0) return text
+
+    var i = braceStart + 1
+    var depth = 1
+    var inString = false
+    var quoteChar = '\u0000'
+    var escape = false
+    while (i < text.length) {
+        val ch = text[i]
+        if (inString) {
+            if (escape) {
+                escape = false
+            } else if (ch == '\\') {
+                escape = true
+            } else if (ch == quoteChar) {
+                inString = false
+            }
+        } else {
+            if (ch == '"' || ch == '\'') {
+                inString = true
+                quoteChar = ch
+            } else if (ch == '{') {
+                depth++
+            } else if (ch == '}') {
+                depth--
+                if (depth == 0) break
+            }
+        }
+        i++
+    }
+    if (depth != 0) return text
+    val blockEnd = i
+    val bodyStart = braceStart + 1
+    val body = text.substring(bodyStart, blockEnd)
+
+    val readyRegex = Regex("""\bready\s*:\s*(true|false)""")
+    return if (readyRegex.containsMatchIn(body)) {
+        val newBody = readyRegex.replace(body, "ready: true")
+        text.replaceRange(bodyStart, blockEnd, newBody)
+    } else {
+        val lineStart = text.lastIndexOf('\n', blockEnd - 1).let { if (it == -1) 0 else it + 1 }
+        val indent = buildString {
+            var j = lineStart
+            while (j < text.length && (text[j] == ' ' || text[j] == '\t')) { append(text[j]); j++ }
+        }
+        val insertion = "\n$indent    ready: true"
+        text.replaceRange(blockEnd, blockEnd, insertion)
     }
 }
