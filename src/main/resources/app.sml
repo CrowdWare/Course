@@ -177,7 +177,7 @@ App {
     onPrimary: "#452B00"
     primaryContainer: "#633F00"
     onPrimaryContainer: "#FFDDB3"
-    secondary: "#DDC2A1"
+    secondary: "#0DDA17" //"#DDC2A1"
     onSecondary: "#3E2D16"
     secondaryContainer: "#56442A"
     onSecondaryContainer: "#FBDEBC"

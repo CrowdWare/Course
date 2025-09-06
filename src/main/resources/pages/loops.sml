@@ -5,5 +5,7 @@ Page {
         padding: "8"
 
         Video { src: "Loops.mp4" }
+        Spacer { amount: 8}
+        Button { label: "Lektion als abgeschlossen markieren" link: "finished" }
     }
 }

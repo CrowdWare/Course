@@ -72,7 +72,7 @@ fun desktop(appTitle: MutableState<String>, demoDir: File) {
     val langs = mutableListOf<String>()
     var lang by remember { mutableStateOf("") }
     var lecture by remember { mutableStateOf(Lecture("", "home.sml", "")) }
-    var theme = Theme()
+    var theme by remember { mutableStateOf(Theme()) }
     val topicList = remember { mutableStateListOf<AccordionEntry>() }
     val bundledSml by remember {
         mutableStateOf(

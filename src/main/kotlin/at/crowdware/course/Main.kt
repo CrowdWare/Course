@@ -330,7 +330,6 @@ fun loadAppState(path: String) {
 
 
 fun extractDemoResources(): File {
-    // Ziel-Temp-Dir erzeugen
     val tempDir = Files.createTempDirectory("demoResources").toFile()
     tempDir.deleteOnExit()
 
@@ -356,19 +355,17 @@ fun extractDemoResources(): File {
                 }
         }
     } else {
-        // Dev-Modus: echte Dateien im build/resources/main
         val dir = File(url.toURI())
-        val basePath = dir.toPath() // CHANGE
+        val basePath = dir.toPath()
         dir.walkTopDown()
             .filter { it.isFile }
             .forEach { file ->
-                val rel = basePath.relativize(file.toPath()).toString() // CHANGE
-                val targetFile = File(tempDir, rel) // CHANGE
-                targetFile.parentFile?.mkdirs() // CHANGE
+                val rel = basePath.relativize(file.toPath()).toString()
+                val targetFile = File(tempDir, rel)
+                targetFile.parentFile?.mkdirs()
                 file.copyTo(targetFile, overwrite = true)
                 targetFile.setExecutable(true)
             }
     }
-
     return tempDir
 }

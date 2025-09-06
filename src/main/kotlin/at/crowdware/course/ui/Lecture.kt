@@ -24,12 +24,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Replay
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -289,14 +290,19 @@ fun renderText(theme: Theme, node: SmlNode) {
 fun renderButton(theme: Theme, node: SmlNode, demoDir: File, onFinished: () -> Unit) {
     val link = getStringValue(node, "link", "")
     if (link == "finished") {
-        Button(onClick = {onFinished()}) {
+        Button(
+            colors = ButtonDefaults.buttonColors(
+            containerColor = hexToColor(theme, "secondary", "#000000"),
+            contentColor = hexToColor(theme, "onSecondary", "#FFFFFF")
+        ),
+            onClick = {onFinished()}) {
             Text(getStringValue(node, "label", ""))
         }
     } else {
         val cmd = link.substringAfter("run:")
         val exe = cmd.split(" ")
-        Button(onClick = {
-            println("exe ${exe[1]} arg ${exe[2]}")
+        Button(
+            onClick = {
             val app = File(demoDir, exe[1])
             ProcessBuilder(app.absolutePath, exe[2]).inheritIO().start()
         }) {
