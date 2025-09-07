@@ -52,6 +52,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.min
 import androidx.compose.ui.unit.sp
 import at.crowdware.course.theme.ExtendedTheme
 import at.crowdware.course.util.*
@@ -94,6 +95,42 @@ fun ShowLecture(theme: Theme, page: String, lang: String, demoDir: File, onFinis
 
 @Composable
 fun renderElement(theme: Theme, node: SmlNode, lang: String, demoDir: File, onFinished: () -> Unit) {
+    when (node.name) {
+        "Column" -> {
+            renderColumn(theme, node, lang, demoDir, onFinished)
+        }
+        "Row" -> {
+            renderRow(theme, node, lang, demoDir, onFinished)
+        }
+        "Spacer" -> {
+            renderSpacer(node)
+        }
+        "Markdown" -> {
+            renderMarkdown(modifier = Modifier, theme, node, lang)
+        }
+        "Text" -> {
+            renderText(theme, node)
+        }
+        "Image" -> {
+            renderImage(theme, node)
+        }
+        "Button" -> {
+            renderButton(theme, node, demoDir, onFinished)
+        }
+        "Youtube" -> {
+            renderYoutube(node)
+        }
+        "Sound" -> {
+            renderSound(theme, node)
+        }
+        else -> {
+            println("unhandled element: ${node.name}")
+        }
+    }
+}
+
+@Composable
+fun ColumnScope.renderElement(theme: Theme, node: SmlNode, lang: String, demoDir: File, onFinished: () -> Unit) {
     when (node.name) {
         "Column" -> {
             renderColumn(theme, node, lang, demoDir, onFinished)
@@ -348,7 +385,7 @@ fun renderYoutube(node: SmlNode) {
 
 
 @Composable
-fun renderVideo(node: SmlNode) {
+fun ColumnScope.renderVideo(node: SmlNode) {
     val src = getStringValue(node, "src", "")
     val mediaUrl = remember(src) {
         val inputStream = object {}.javaClass.classLoader
@@ -381,10 +418,26 @@ fun renderVideo(node: SmlNode) {
         }
     }
 
+    BoxWithConstraints(
+        modifier = Modifier
+            .weight(1f)          // take the leftover space
+            .fillMaxWidth()
+    ) {
+        val desired = maxWidth / (16f / 9f)
+        val height = min(desired, maxHeight)
+
+        Box(Modifier.height(height).fillMaxWidth()) {
+            VideoPlayerComposable(
+                modifier = Modifier.fillMaxSize(),
+                playerHost = playerHost
+            )
+        }
+    }
+    /*
     VideoPlayerComposable(
         modifier = Modifier.aspectRatio(16f / 9f),
         playerHost = playerHost
-    )
+    )*/
 }
 
 @Composable
