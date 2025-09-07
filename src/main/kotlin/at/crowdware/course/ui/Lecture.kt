@@ -349,7 +349,6 @@ fun renderButton(theme: Theme, node: SmlNode, demoDir: File, onFinished: () -> U
         }
     } else if (link.startsWith("web:")) {
         val url = link.substringAfter("web:")
-        println("link: $url")
         Button(
             onClick = { openBrowser(url) }) {
             Text(getStringValue(node, "label", ""))
@@ -375,7 +374,7 @@ fun renderImage(theme: Theme, node: SmlNode) {
                 "fillheight" -> ContentScale.FillHeight
                 "none" -> ContentScale.None
                 else -> ContentScale.Fit
-            }, modifier = Modifier
+            }, modifier = Modifier.fillMaxWidth()
                 .padding(padding.left.dp, padding.top.dp, padding.right.dp, padding.bottom.dp)
         )
     }

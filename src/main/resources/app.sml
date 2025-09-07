@@ -6,7 +6,7 @@ App {
 
     Course {
         lang: "de"
-        name: "Compose Desktop"
+        name: "Kotlin Compose Desktop"
         description: "This is the description"
 
         Topic {
