@@ -67,6 +67,8 @@ import kotlinx.coroutines.delay
 import kotlinx.io.IOException
 import java.io.File
 import javax.imageio.ImageIO
+import java.awt.Desktop
+import java.net.URI
 
 @Composable
 fun ShowLecture(theme: Theme, page: String, lang: String, demoDir: File, onFinished: () -> Unit) {
@@ -335,7 +337,7 @@ fun renderButton(theme: Theme, node: SmlNode, demoDir: File, onFinished: () -> U
             onClick = {onFinished()}) {
             Text(getStringValue(node, "label", ""))
         }
-    } else {
+    } else if (link.startsWith("run:")) {
         val cmd = link.substringAfter("run:")
         val exe = cmd.split(" ")
         Button(
@@ -343,6 +345,13 @@ fun renderButton(theme: Theme, node: SmlNode, demoDir: File, onFinished: () -> U
             val app = File(demoDir, exe[1])
             ProcessBuilder(app.absolutePath, exe[2]).inheritIO().start()
         }) {
+            Text(getStringValue(node, "label", ""))
+        }
+    } else if (link.startsWith("web:")) {
+        val url = link.substringAfter("web:")
+        println("link: $url")
+        Button(
+            onClick = { openBrowser(url) }) {
             Text(getStringValue(node, "label", ""))
         }
     }
@@ -722,5 +731,13 @@ fun loadImageFromResources(filename: String): ImageBitmap? {
     } catch (e: IOException) {
         e.printStackTrace()
         null
+    }
+}
+
+fun openBrowser(url: String) {
+    if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+        Desktop.getDesktop().browse(URI(url))
+    } else {
+        println("Opening browser not supported on this platform")
     }
 }
