@@ -115,60 +115,53 @@ App {
             Lection {
                 label: "Dialoge"
                 src: "dialoge.sml"
-                duration: ""
+                duration: "02:17"
             }
             Lection {
                 label: "Imports"
                 src: "imports.sml"
-                duration: ""
+                duration: "01:40"
             }
         }
         Topic {
             label: "Controls"
-
+            Lection {
+                label: "Listen"
+                src: "listen.sml"
+                duration: "01:34"
+            }
             Lection {
                 label: "Akkordeon"
                 src: "akkordeon.sml"
-                duration: ""
-            }
-            Lection {
-                label: "Video"
-                src: "video.sml"
-                duration: ""
+                duration: "01:32"
             }
             Lection {
                 label: "Treeview"
                 src: "treeview.sml"
-                duration: ""
+                duration: "01:50"
+            }
+        }
+        Topic {
+            label: "Themes"
+
+            Lection {
+                label: "Theming"
+                src: "theme.sml"
+                duration: "00:39"
             }
         }
         Topic {
             label: "Systemintegration & Desktop Features"
 
             Lection {
-                label: "Windows"
-                src: "treeview.sml"
-                duration: ""
-            }
-            Lection {
-                label: "Mac"
-                src: "treeview.sml"
-                duration: ""
-            }
-            Lection {
-                label: "Linux"
-                src: "treeview.sml"
+                label: "Pfade, Menu, Paketierung"
+                src: "plattform.sml"
                 duration: ""
             }
         }
-        Topic {
-            label: "Stile & Themes"
-        }
+
         Topic {
             label: "Todo App"
-        }
-        Topic {
-            label: "Verteilung & Packetierung"
         }
     }
 

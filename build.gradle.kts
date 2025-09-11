@@ -1,11 +1,11 @@
-//import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
     kotlin("jvm") version "2.0.0"
     id("org.jetbrains.compose") version "1.6.10"
     id("org.jetbrains.kotlin.plugin.compose") version "2.0.0" // ✅ NEU
     id("org.jetbrains.kotlin.plugin.serialization") version "2.0.0"
-    id("application")
+    //id("application")
 }
 
 group = "at.crowdware.course"
@@ -29,6 +29,28 @@ dependencies {
     implementation("network.chaintech:compose-multiplatform-media-player:1.0.40")
     implementation("org.jetbrains.compose.material:material-icons-extended:1.6.10")
 }
-application {
-    mainClass.set("at.crowdware.course.MainKt") // ✅ dein Entry-Point
+
+compose.desktop {
+    application {
+        mainClass = "at.crowdware.course.MainKt"
+
+        nativeDistributions {
+            modules("jdk.unsupported")
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            packageName = "Course"
+            packageVersion = "1.0.0"
+            linux {
+                iconFile.set(project.file("src/desktopMain/resources/icons/LinuxIcon.png"))
+            }
+            windows {
+                iconFile.set(project.file("src/desktopMain/resources/icons/WindowsIcon.ico"))
+                menuGroup = "Course"
+                shortcut = true
+            }
+            macOS {
+                iconFile.set(project.file("src/desktopMain/resources/icons/icon.icns"))
+                bundleID = "at.crowdware.course"
+            }
+        }
+    }
 }

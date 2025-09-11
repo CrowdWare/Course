@@ -29,12 +29,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Replay
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,7 +51,6 @@ import androidx.compose.ui.unit.min
 import androidx.compose.ui.unit.sp
 import at.crowdware.course.theme.ExtendedTheme
 import at.crowdware.course.util.*
-import chaintech.videoplayer.host.MediaPlayerEvent
 import chaintech.videoplayer.host.MediaPlayerHost
 import chaintech.videoplayer.model.ScreenResize
 import chaintech.videoplayer.ui.audio.AudioPlayer
@@ -65,10 +59,10 @@ import chaintech.videoplayer.ui.youtube.YouTubePlayerComposable
 import chaintech.videoplayer.util.RetrieveMediaDuration
 import kotlinx.coroutines.delay
 import kotlinx.io.IOException
-import java.io.File
-import javax.imageio.ImageIO
 import java.awt.Desktop
+import java.io.File
 import java.net.URI
+import javax.imageio.ImageIO
 
 @Composable
 fun ShowLecture(theme: Theme, page: String, lang: String, demoDir: File, onFinished: () -> Unit) {
@@ -331,10 +325,10 @@ fun renderButton(theme: Theme, node: SmlNode, demoDir: File, onFinished: () -> U
     if (link == "finished") {
         Button(
             colors = ButtonDefaults.buttonColors(
-            containerColor = hexToColor(theme, "secondary", "#000000"),
-            contentColor = hexToColor(theme, "onSecondary", "#FFFFFF")
-        ),
-            onClick = {onFinished()}) {
+                containerColor = hexToColor(theme, "secondary", "#000000"),
+                contentColor = hexToColor(theme, "onSecondary", "#FFFFFF")
+            ),
+            onClick = { onFinished() }) {
             Text(getStringValue(node, "label", ""))
         }
     } else if (link.startsWith("run:")) {
@@ -342,9 +336,12 @@ fun renderButton(theme: Theme, node: SmlNode, demoDir: File, onFinished: () -> U
         val exe = cmd.split(" ")
         Button(
             onClick = {
-            val app = File(demoDir, exe[1])
-            ProcessBuilder(app.absolutePath, exe[2]).inheritIO().start()
-        }) {
+                val app = File(demoDir, exe[1])
+                if (exe.size > 2)
+                    ProcessBuilder(app.absolutePath, exe[2]).inheritIO().start()
+                else
+                    ProcessBuilder(app.absolutePath).inheritIO().start()
+            }) {
             Text(getStringValue(node, "label", ""))
         }
     } else if (link.startsWith("web:")) {
@@ -441,11 +438,6 @@ fun ColumnScope.renderVideo(node: SmlNode) {
             )
         }
     }
-    /*
-    VideoPlayerComposable(
-        modifier = Modifier.aspectRatio(16f / 9f),
-        playerHost = playerHost
-    )*/
 }
 
 @Composable
