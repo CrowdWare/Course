@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "at.crowdware.course"
-version = "1.0-SNAPSHOT"
+version = "1.0"
 
 repositories {
     mavenCentral()
@@ -40,15 +40,15 @@ compose.desktop {
             packageName = "Course"
             packageVersion = "1.0.0"
             linux {
-                iconFile.set(project.file("src/desktopMain/resources/icons/LinuxIcon.png"))
+                iconFile.set(project.file("src/main/resources/icons/LinuxIcon.png"))
             }
             windows {
-                iconFile.set(project.file("src/desktopMain/resources/icons/WindowsIcon.ico"))
+                iconFile.set(project.file("src/main/resources/icons/WindowsIcon.ico"))
                 menuGroup = "Course"
                 shortcut = true
             }
             macOS {
-                iconFile.set(project.file("src/desktopMain/resources/icons/icon.icns"))
+                iconFile.set(project.file("src/main/resources/icons/icon.icns"))
                 bundleID = "at.crowdware.course"
             }
         }

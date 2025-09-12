@@ -156,12 +156,18 @@ App {
             Lection {
                 label: "Pfade, Menu, Paketierung"
                 src: "plattform.sml"
-                duration: ""
+                duration: "03:40"
             }
         }
 
         Topic {
             label: "Todo App"
+
+            Lection {
+                label: "Um was geht es"
+                src: "todo.sml"
+                duration: "05:55"
+            }
         }
     }
 
