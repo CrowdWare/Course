@@ -4,7 +4,7 @@ Page {
     Column {
         padding: "8"
 
-        Video { src: "JCEinführung.mp4" }
+        Video { src: "https://crowdware.info/wp-content/uploads/videos/composedesktop/JCEinführung.mp4" }
         Spacer { amount: 8}
         Row {
             Button { label: "Beispiel-Anwendung starten" link: "run: at.crowdware.jetpackdesktop.demo.app/contents/MacOS/at.crowdware.jetpackdesktop.demo 1" }

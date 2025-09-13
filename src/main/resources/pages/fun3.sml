@@ -4,7 +4,7 @@ Page {
     Column {
         padding: "8"
 
-        Video { src: "FunktionenC.mp4" }
+        Video { src: "https://crowdware.info/wp-content/uploads/videos/composedesktop/FunktionenC.mp4" }
         Spacer { amount: 8}
         Button { label: "Lektion als abgeschlossen markieren" link: "finished" }
     }

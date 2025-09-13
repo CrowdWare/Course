@@ -4,7 +4,7 @@ Page {
     Column {
         padding: "8"
 
-        Video { src: "Listen.mp4" }
+        Video { src: "https://crowdware.info/wp-content/uploads/videos/composedesktop/Listen.mp4" }
         Spacer { amount: 8}
         Row {
             Column {

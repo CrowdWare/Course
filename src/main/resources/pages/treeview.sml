@@ -4,7 +4,7 @@ Page {
     Column {
         padding: "8"
 
-        Video { src: "Treeview.mp4" }
+        Video { src: "https://crowdware.info/wp-content/uploads/videos/composedesktop/Treeview.mp4" }
         Spacer { amount: 8}
         Row {
             Column {

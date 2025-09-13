@@ -393,15 +393,19 @@ fun renderYoutube(node: SmlNode) {
 fun ColumnScope.renderVideo(node: SmlNode) {
     val src = getStringValue(node, "src", "")
     val mediaUrl = remember(src) {
-        val inputStream = object {}.javaClass.classLoader
-            .getResourceAsStream("videos/$src")
-            ?: error("❌ Resource not found: $src")
+        if (src.startsWith("http://") || src.startsWith("https://")) {
+            src // direkt verwenden
+        } else {
+            val inputStream = object {}.javaClass.classLoader
+                .getResourceAsStream("videos/$src")
+                ?: error("❌ Resource not found: $src")
 
-        val tempFile = File.createTempFile("video_", ".mp4").apply {
-            deleteOnExit()
-            outputStream().use { output -> inputStream.copyTo(output) }
+            val tempFile = File.createTempFile("video_", ".mp4").apply {
+                deleteOnExit()
+                outputStream().use { output -> inputStream.copyTo(output) }
+            }
+            "file://" + tempFile.absolutePath.replace("\\", "/")
         }
-        "file://" + tempFile.absolutePath.replace("\\", "/")
     }
 
     var duration by remember { mutableStateOf(1.0) }
