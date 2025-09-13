@@ -4,7 +4,7 @@ Page {
 
     Column {
         padding: "8"
-        Image { src: "https://crowdware.info/wp-content/uploads/videos/composedesktop/KotlinComposeDesktop.png" scale: "fit" }
+        Image { src: "KotlinComposeDesktop.png" scale: "fit" }
         Spacer { amount: 16}
         Markdown { text: "part:home" }
     }
